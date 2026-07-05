@@ -1,0 +1,100 @@
+aid: transistor
+name: Transistor
+review:
+  question: Does Transistor expose a documented public WebSocket API?
+  answer: false
+  date: '2026-07-05'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    No AsyncAPI document was authored. Transistor's public API is
+    request/response REST over HTTPS following the JSON:API specification.
+    Transistor does offer event webhooks (server-to-server HTTP POST
+    callbacks for episode and subscriber events), but webhooks are outbound
+    HTTP callbacks, not a client-facing server-push streaming transport
+    (WebSocket or SSE) on Transistor's own API. There is no bidirectional or
+    streaming channel to model.
+findings:
+  summary: |
+    Transistor does not publish a documented public WebSocket API. Transistor
+    is a podcast hosting and analytics platform whose public API is a REST API
+    at https://api.transistor.fm/v1 that follows the JSON:API specification.
+    Authentication is via an x-api-key header (no OAuth). All documented
+    endpoints are request/response REST over HTTPS covering shows, episodes,
+    analytics, private podcast subscribers, and webhooks. The only push
+    mechanism is event webhooks - outbound HTTP POST callbacks to a URL you
+    register for episode_created, episode_published, subscriber_created, and
+    subscriber_deleted events. No realtime, bidirectional, or streaming
+    WebSocket (ws:// or wss://) endpoint is documented on Transistor's API.
+  accessModel: |
+    Public, self-service REST API available to Transistor account holders. API
+    access is included on paid plans. Keys are generated in the dashboard
+    Account area and passed in the x-api-key header. Requests are rate-limited
+    to 10 requests per 10 seconds; exceeding it returns 429 and blocks access
+    for 10 seconds. The API conforms to JSON:API (sparse fieldsets and included
+    related resources supported).
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://api.transistor.fm/v1
+      documented: true
+      note: JSON:API-compliant request/response REST. Authenticated with x-api-key header.
+    - protocol: Webhook
+      scheme: https
+      documented: true
+      note: Outbound HTTP POST callbacks for episode and subscriber events. Server-to-endpoint HTTP, not WebSocket.
+    - protocol: WebSocket
+      scheme: wss
+      documented: false
+      note: No WebSocket endpoint is documented anywhere in Transistor's API reference as of the review date.
+  endpointsConfirmedRest:
+    - GET    https://api.transistor.fm/v1
+    - GET    https://api.transistor.fm/v1/shows
+    - GET    https://api.transistor.fm/v1/shows/:id
+    - PATCH  https://api.transistor.fm/v1/shows/:id
+    - GET    https://api.transistor.fm/v1/episodes
+    - GET    https://api.transistor.fm/v1/episodes/:id
+    - POST   https://api.transistor.fm/v1/episodes
+    - PATCH  https://api.transistor.fm/v1/episodes/:id
+    - PATCH  https://api.transistor.fm/v1/episodes/:id/publish
+    - GET    https://api.transistor.fm/v1/episodes/authorize_upload
+    - GET    https://api.transistor.fm/v1/analytics/:id
+    - GET    https://api.transistor.fm/v1/analytics/:id/episodes
+    - GET    https://api.transistor.fm/v1/analytics/episodes/:id
+    - GET    https://api.transistor.fm/v1/subscribers
+    - GET    https://api.transistor.fm/v1/subscribers/:id
+    - POST   https://api.transistor.fm/v1/subscribers
+    - POST   https://api.transistor.fm/v1/subscribers/batch
+    - PATCH  https://api.transistor.fm/v1/subscribers/:id
+    - DELETE https://api.transistor.fm/v1/subscribers/:id
+    - GET    https://api.transistor.fm/v1/webhooks
+    - POST   https://api.transistor.fm/v1/webhooks
+    - DELETE https://api.transistor.fm/v1/webhooks/:id
+sources:
+  - url: https://developers.transistor.fm/
+    type: Documentation
+    note: API base URL https://api.transistor.fm/v1, x-api-key auth, JSON:API format, 10 req/10 sec rate limit. All REST. No WebSocket mentioned.
+  - url: https://developers.transistor.fm/#Show
+    type: APIReference
+    note: Show list, retrieve, and update endpoints.
+  - url: https://developers.transistor.fm/#Episode
+    type: APIReference
+    note: Episode CRUD plus authorize_upload and publish endpoints.
+  - url: https://developers.transistor.fm/#Analytics
+    type: APIReference
+    note: Show and episode download analytics endpoints.
+  - url: https://developers.transistor.fm/#Subscriber
+    type: APIReference
+    note: Private podcast subscriber CRUD and batch endpoints.
+  - url: https://developers.transistor.fm/#Webhook
+    type: APIReference
+    note: Webhook subscription list, create, and delete for episode and subscriber events. Outbound HTTP callbacks, not WebSocket.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No WebSocket protocol surface exists. Transistor's public API is
+    request/response REST following JSON:API, and its only push mechanism is
+    outbound event webhooks (HTTP POST callbacks). No AsyncAPI document was
+    created because there is no client-facing server-push streaming transport
+    (WebSocket or SSE) on Transistor's own API to model.

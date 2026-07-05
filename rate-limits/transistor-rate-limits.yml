@@ -1,0 +1,58 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Transistor
+providerId: transistor
+created: '2026-07-05'
+modified: '2026-07-05'
+reconciled: false
+tags:
+- Podcasting
+- Podcast Hosting
+- API
+- Rate Limiting
+- Quotas
+description: >-
+  Transistor publishes a single, explicit API rate limit: 10 requests per 10
+  seconds. Exceeding the limit returns an HTTP 429 error and blocks API access
+  for 10 seconds. Transistor also advises against using the API as a primary
+  live data source for website content, recommending caching of API responses
+  instead. Separate from API request limits, each subscription plan caps
+  monthly podcast downloads and the number of private podcast subscribers.
+notes: >-
+  The 10-requests-per-10-seconds limit is documented on the Transistor
+  developer site as of 2026-07-05. Implement client-side throttling, retry with
+  backoff on 429, and cache responses. Verify the current limit on the
+  developer documentation during reconciliation.
+sources:
+- https://developers.transistor.fm/
+responseCodes:
+  throttled: 429
+limits:
+- name: API Requests
+  scope: account
+  metric: requests
+  limit: 10 per 10 seconds
+  notes: Exceeding this returns HTTP 429 and blocks access for 10 seconds.
+- name: Monthly Downloads
+  scope: account
+  metric: downloads
+  limit: per plan (20K Starter, 100K Professional, 250K Business, custom Enterprise)
+  notes: Download allowance is a billing quota set by the subscription plan, not an API request limit.
+- name: Private Subscribers
+  scope: account
+  metric: subscribers
+  limit: per plan (50 Starter, 500 Professional, 3000 Business, custom Enterprise)
+  notes: Private podcast subscriber cap set by the subscription plan.
+policies:
+- name: Throttle Window
+  description: Requests are counted in a rolling 10-second window; more than 10 in that window trips the limit.
+- name: Cooldown
+  description: After a 429, API access is blocked for 10 seconds before requests are accepted again.
+- name: Caching Guidance
+  description: Transistor recommends caching API responses and not using the API as a live data source for website content.
+- name: Backoff Strategy
+  description: Clients should implement exponential backoff with jitter and honor the cooldown after a 429 response.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

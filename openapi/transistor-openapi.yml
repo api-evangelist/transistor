@@ -1,0 +1,725 @@
+openapi: 3.0.3
+info:
+  title: Transistor API
+  description: >-
+    The Transistor API is a public REST API for the Transistor podcast hosting
+    and analytics platform. It follows the JSON:API specification, accepts JSON
+    or form-encoded request bodies, and returns JSON:API resource objects. It
+    supports sparse fieldsets and included related resources. Authentication is
+    via an x-api-key header carrying an API key generated in the Transistor
+    dashboard Account area. The API covers shows, episodes, download analytics,
+    private podcast subscribers, and event webhooks. Requests are rate-limited
+    to 10 requests per 10 seconds; exceeding the limit returns HTTP 429 and
+    blocks access for 10 seconds.
+  version: '1.0'
+  contact:
+    name: Transistor
+    url: https://transistor.fm
+  termsOfService: https://transistor.fm/legal/
+servers:
+  - url: https://api.transistor.fm/v1
+    description: Transistor API v1
+security:
+  - apiKeyAuth: []
+tags:
+  - name: Account
+    description: The authenticated user account.
+  - name: Shows
+    description: Podcasts (shows) in your Transistor account.
+  - name: Episodes
+    description: Podcast episodes, drafts, uploads, and publishing.
+  - name: Analytics
+    description: Download analytics for shows and episodes.
+  - name: Subscribers
+    description: Private (subscriber-only) podcast subscribers.
+  - name: Webhooks
+    description: Event webhook subscriptions.
+paths:
+  /:
+    get:
+      operationId: getAccount
+      tags:
+        - Account
+      summary: Retrieve authenticated user
+      description: Returns details for the authenticated user associated with the API key.
+      responses:
+        '200':
+          description: The authenticated user resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResource'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /shows:
+    get:
+      operationId: listShows
+      tags:
+        - Shows
+      summary: List shows
+      description: Returns a paginated list of the shows in your account.
+      parameters:
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: A paginated list of shows.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResourceList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /shows/{id}:
+    parameters:
+      - $ref: '#/components/parameters/ResourceId'
+    get:
+      operationId: getShow
+      tags:
+        - Shows
+      summary: Retrieve a show
+      description: Returns a single show by ID.
+      responses:
+        '200':
+          description: The requested show.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResource'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    patch:
+      operationId: updateShow
+      tags:
+        - Shows
+      summary: Update a show
+      description: Updates metadata for a single show.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WriteBody'
+      responses:
+        '200':
+          description: The updated show.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResource'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /episodes:
+    get:
+      operationId: listEpisodes
+      tags:
+        - Episodes
+      summary: List episodes
+      description: >-
+        Returns a paginated list of episodes. Filterable by show, status, and
+        a full-text query.
+      parameters:
+        - name: show_id
+          in: query
+          description: Filter episodes belonging to a specific show.
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: Filter by episode status (for example published, scheduled, or draft).
+          schema:
+            type: string
+        - name: query
+          in: query
+          description: Full-text search across episodes.
+          schema:
+            type: string
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: A paginated list of episodes.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResourceList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    post:
+      operationId: createEpisode
+      tags:
+        - Episodes
+      summary: Create an episode
+      description: Creates a new draft episode.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WriteBody'
+      responses:
+        '201':
+          description: The created episode.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResource'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /episodes/authorize_upload:
+    get:
+      operationId: authorizeEpisodeUpload
+      tags:
+        - Episodes
+      summary: Authorize an audio upload
+      description: >-
+        Returns a pre-signed upload URL and an audio_url. Upload your audio file
+        with an HTTP PUT to the returned upload_url, then set the returned
+        audio_url on the episode.
+      parameters:
+        - name: filename
+          in: query
+          required: true
+          description: The name of the audio file to be uploaded.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Upload authorization data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResource'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /episodes/{id}:
+    parameters:
+      - $ref: '#/components/parameters/ResourceId'
+    get:
+      operationId: getEpisode
+      tags:
+        - Episodes
+      summary: Retrieve an episode
+      description: Returns a single episode by ID.
+      responses:
+        '200':
+          description: The requested episode.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResource'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    patch:
+      operationId: updateEpisode
+      tags:
+        - Episodes
+      summary: Update an episode
+      description: Updates an existing episode.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WriteBody'
+      responses:
+        '200':
+          description: The updated episode.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResource'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /episodes/{id}/publish:
+    parameters:
+      - $ref: '#/components/parameters/ResourceId'
+    patch:
+      operationId: publishEpisode
+      tags:
+        - Episodes
+      summary: Publish, schedule, or unpublish an episode
+      description: >-
+        Changes an episode's publication status - publish immediately, schedule
+        for a future date, or unpublish - by setting the status field.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                episode:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                      description: The target status, for example published, scheduled, or draft.
+                    published_at:
+                      type: string
+                      format: date-time
+                      description: The scheduled publish time when status is scheduled.
+      responses:
+        '200':
+          description: The episode with its updated publication status.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResource'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /analytics/{id}:
+    parameters:
+      - $ref: '#/components/parameters/ResourceId'
+    get:
+      operationId: getShowAnalytics
+      tags:
+        - Analytics
+      summary: Show analytics
+      description: >-
+        Returns downloads per day for a show. Defaults to the last 14 days; a
+        custom range can be supplied with start_date and end_date.
+      parameters:
+        - $ref: '#/components/parameters/StartDate'
+        - $ref: '#/components/parameters/EndDate'
+      responses:
+        '200':
+          description: Show download analytics.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResource'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /analytics/{id}/episodes:
+    parameters:
+      - $ref: '#/components/parameters/ResourceId'
+    get:
+      operationId: getAllEpisodeAnalytics
+      tags:
+        - Analytics
+      summary: All-episodes analytics for a show
+      description: >-
+        Returns download analytics aggregated across all episodes of a show.
+        Defaults to the last 7 days; a custom range can be supplied with
+        start_date and end_date.
+      parameters:
+        - $ref: '#/components/parameters/StartDate'
+        - $ref: '#/components/parameters/EndDate'
+      responses:
+        '200':
+          description: Analytics for all episodes of the show.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResource'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /analytics/episodes/{id}:
+    parameters:
+      - $ref: '#/components/parameters/ResourceId'
+    get:
+      operationId: getEpisodeAnalytics
+      tags:
+        - Analytics
+      summary: Single-episode analytics
+      description: >-
+        Returns download analytics for a single episode. Defaults to the last
+        14 days; a custom range can be supplied with start_date and end_date.
+      parameters:
+        - $ref: '#/components/parameters/StartDate'
+        - $ref: '#/components/parameters/EndDate'
+      responses:
+        '200':
+          description: Analytics for the episode.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResource'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /subscribers:
+    get:
+      operationId: listSubscribers
+      tags:
+        - Subscribers
+      summary: List subscribers
+      description: Returns a paginated list of private podcast subscribers.
+      parameters:
+        - $ref: '#/components/parameters/PageNumber'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: A paginated list of subscribers.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResourceList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    post:
+      operationId: createSubscriber
+      tags:
+        - Subscribers
+      summary: Add a subscriber
+      description: >-
+        Adds a private podcast subscriber, optionally sending an email
+        invitation.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WriteBody'
+      responses:
+        '201':
+          description: The created subscriber.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResource'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    delete:
+      operationId: deleteSubscriberByEmail
+      tags:
+        - Subscribers
+      summary: Remove a subscriber
+      description: Removes a private podcast subscriber, identified by email.
+      parameters:
+        - name: email
+          in: query
+          description: The email address of the subscriber to remove.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The subscriber was removed.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /subscribers/batch:
+    post:
+      operationId: batchCreateSubscribers
+      tags:
+        - Subscribers
+      summary: Add subscribers in bulk
+      description: Adds multiple private podcast subscribers in a single request.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subscribers:
+                  type: array
+                  items:
+                    type: object
+      responses:
+        '201':
+          description: The created subscribers.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResourceList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /subscribers/{id}:
+    parameters:
+      - $ref: '#/components/parameters/ResourceId'
+    get:
+      operationId: getSubscriber
+      tags:
+        - Subscribers
+      summary: Retrieve a subscriber
+      description: Returns a single private podcast subscriber by ID.
+      responses:
+        '200':
+          description: The requested subscriber.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResource'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    patch:
+      operationId: updateSubscriber
+      tags:
+        - Subscribers
+      summary: Update a subscriber
+      description: Updates a private podcast subscriber's email address.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WriteBody'
+      responses:
+        '200':
+          description: The updated subscriber.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResource'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    delete:
+      operationId: deleteSubscriber
+      tags:
+        - Subscribers
+      summary: Remove a subscriber by ID
+      description: Removes a single private podcast subscriber by ID.
+      responses:
+        '200':
+          description: The subscriber was removed.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /webhooks:
+    get:
+      operationId: listWebhooks
+      tags:
+        - Webhooks
+      summary: List webhooks
+      description: Returns the webhook subscriptions in your account.
+      responses:
+        '200':
+          description: A list of webhook subscriptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResourceList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    post:
+      operationId: createWebhook
+      tags:
+        - Webhooks
+      summary: Subscribe to an event
+      description: >-
+        Registers a webhook that POSTs to a callback URL when an event fires.
+        Supported events include episode_created, episode_published,
+        subscriber_created, and subscriber_deleted.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event_name:
+                  type: string
+                  description: The event to subscribe to.
+                url:
+                  type: string
+                  format: uri
+                  description: The callback URL that receives the event payload.
+                show_id:
+                  type: string
+                  description: The show the webhook is scoped to.
+      responses:
+        '201':
+          description: The created webhook subscription.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResource'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /webhooks/{id}:
+    parameters:
+      - $ref: '#/components/parameters/ResourceId'
+    delete:
+      operationId: deleteWebhook
+      tags:
+        - Webhooks
+      summary: Unsubscribe a webhook
+      description: Deletes a webhook subscription by ID.
+      responses:
+        '200':
+          description: The webhook subscription was deleted.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API key generated in the Transistor dashboard Account area.
+  parameters:
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: The resource identifier.
+      schema:
+        type: string
+    PageNumber:
+      name: pagination[page]
+      in: query
+      description: The page number to return.
+      schema:
+        type: integer
+    PageSize:
+      name: pagination[per]
+      in: query
+      description: The number of records to return per page.
+      schema:
+        type: integer
+    StartDate:
+      name: start_date
+      in: query
+      description: Start of the analytics date range (dd-mm-yyyy).
+      schema:
+        type: string
+    EndDate:
+      name: end_date
+      in: query
+      description: End of the analytics date range (dd-mm-yyyy).
+      schema:
+        type: string
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    UnprocessableEntity:
+      description: The request was well-formed but the parameters were invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    RateLimited:
+      description: >-
+        Too many requests. The API allows 10 requests per 10 seconds; exceeding
+        this blocks access for 10 seconds.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+  schemas:
+    JsonApiResource:
+      type: object
+      description: A JSON:API single-resource document.
+      properties:
+        data:
+          $ref: '#/components/schemas/ResourceObject'
+        included:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceObject'
+    JsonApiResourceList:
+      type: object
+      description: A JSON:API list document with pagination metadata.
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceObject'
+        meta:
+          type: object
+          properties:
+            currentPage:
+              type: integer
+            totalPages:
+              type: integer
+            totalCount:
+              type: integer
+    ResourceObject:
+      type: object
+      description: A JSON:API resource object.
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        attributes:
+          type: object
+          additionalProperties: true
+        relationships:
+          type: object
+          additionalProperties: true
+    WriteBody:
+      type: object
+      description: >-
+        A write payload. Transistor accepts attributes nested under a
+        resource-named key (for example show, episode, or subscriber).
+      additionalProperties: true
+    Errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              status:
+                type: string
+              title:
+                type: string
+              detail:
+                type: string

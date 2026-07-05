@@ -1,0 +1,188 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Transistor
+providerId: transistor
+created: '2026-07-05'
+modified: '2026-07-05'
+reconciled: false
+tags:
+- Podcasting
+- Podcast Hosting
+- Analytics
+- Media
+- Plans
+description: >-
+  Transistor sells flat monthly (or yearly) subscription plans for podcast
+  hosting. Every paid plan includes unlimited podcasts (shows), unlimited team
+  collaborators, advanced analytics, a built-in podcast website, and full API
+  access. Plans differ by included monthly downloads and the number of private
+  podcast subscribers. Yearly billing is offered at 12 months for the price of
+  10. API access is not billed separately - it is included with the
+  subscription; the API is rate-limited to 10 requests per 10 seconds.
+notes: >-
+  Prices captured from transistor.fm/pricing on 2026-07-05 and may change.
+  Transcription add-ons (5 or 20 hours/month) are available at additional cost
+  not itemized here. Verify current tiers, download allowances, and add-on
+  pricing on the pricing page during reconciliation.
+sources:
+- https://transistor.fm/pricing/
+- https://developers.transistor.fm/
+plans:
+- id: transistor-starter
+  name: Starter
+  type: paid
+  description: >-
+    Entry paid plan with unlimited shows, 20,000 monthly downloads, 50 private
+    subscribers, unlimited collaborators, advanced analytics, a built-in
+    website, and full API access.
+  entries:
+  - label: Monthly Subscription
+    name: starter_subscription
+    type: flat
+    metric: subscription
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: '19.00'
+    currency: USD
+    userMultiplied: false
+  - label: Included Monthly Downloads
+    name: starter_downloads
+    type: usage
+    metric: downloads
+    limit: 20000
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: included
+    userMultiplied: false
+  - label: Private Subscribers
+    name: starter_subscribers
+    type: usage
+    metric: subscribers
+    limit: 50
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: included
+    userMultiplied: false
+  elements:
+  - name: Unlimited Podcasts
+  - name: Unlimited Collaborators
+  - name: Advanced Analytics
+  - name: Built-in Website
+  - name: API Access
+- id: transistor-professional
+  name: Professional
+  type: paid
+  description: >-
+    Mid-tier plan with unlimited shows, 100,000 monthly downloads, 500 private
+    subscribers, plus dynamic ad insertion (pre/mid/post-roll), dynamic show
+    notes, and auto-post to YouTube, in addition to all Starter features.
+  entries:
+  - label: Monthly Subscription
+    name: professional_subscription
+    type: flat
+    metric: subscription
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: '49.00'
+    currency: USD
+    userMultiplied: false
+  - label: Included Monthly Downloads
+    name: professional_downloads
+    type: usage
+    metric: downloads
+    limit: 100000
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: included
+    userMultiplied: false
+  - label: Private Subscribers
+    name: professional_subscribers
+    type: usage
+    metric: subscribers
+    limit: 500
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: included
+    userMultiplied: false
+  elements:
+  - name: All Starter Features
+  - name: Dynamic Ad Insertion
+  - name: Dynamic Show Notes
+  - name: Auto-Post to YouTube
+- id: transistor-business
+  name: Business
+  type: paid
+  description: >-
+    Higher-volume plan with unlimited shows, 250,000 monthly downloads, 3,000
+    private subscribers, and Transistor branding removal, in addition to all
+    Professional features.
+  entries:
+  - label: Monthly Subscription
+    name: business_subscription
+    type: flat
+    metric: subscription
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: '99.00'
+    currency: USD
+    userMultiplied: false
+  - label: Included Monthly Downloads
+    name: business_downloads
+    type: usage
+    metric: downloads
+    limit: 250000
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: included
+    userMultiplied: false
+  - label: Private Subscribers
+    name: business_subscribers
+    type: usage
+    metric: subscribers
+    limit: 3000
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: included
+    userMultiplied: false
+  elements:
+  - name: All Professional Features
+  - name: Branding Removal
+- id: transistor-enterprise
+  name: Enterprise
+  type: enterprise
+  description: >-
+    Custom plan for teams needing more than 250,000 monthly downloads or more
+    than 3,000 private podcast subscribers. Negotiated volume, terms, and
+    support. Contact Transistor.
+  entries:
+  - label: Enterprise Agreement
+    name: enterprise
+    type: flat
+    metric: subscription
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: from 199.00 (custom)
+    currency: USD
+    userMultiplied: false
+  elements:
+  - name: Custom Download Volume
+  - name: Custom Subscriber Volume
+  - name: All Business Features
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

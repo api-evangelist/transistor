@@ -1,0 +1,271 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Transistor API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "apikey": {
+        "key": "x-api-key",
+        "value": "{{apiKey}}",
+        "in": "header"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": { "name": "Account", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Retrieve authenticated user.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.transistor.fm/v1/" },
+          "docs": "Returns details for the authenticated user associated with the API key."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Shows", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List shows.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.transistor.fm/v1/shows" },
+          "docs": "Returns a paginated list of the shows in your account."
+        },
+        {
+          "info": { "name": "Retrieve a show.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.transistor.fm/v1/shows/:id",
+            "params": [
+              { "name": "id", "value": "", "type": "path", "description": "The show ID." }
+            ]
+          },
+          "docs": "Returns a single show by ID."
+        },
+        {
+          "info": { "name": "Update a show.", "type": "http" },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.transistor.fm/v1/shows/:id",
+            "params": [
+              { "name": "id", "value": "", "type": "path", "description": "The show ID." }
+            ],
+            "body": { "type": "json", "data": "{ \"show\": { \"description\": \"Updated show description\" } }" }
+          },
+          "docs": "Updates metadata for a single show."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Episodes", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List episodes.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.transistor.fm/v1/episodes",
+            "params": [
+              { "name": "show_id", "value": "", "type": "query", "description": "Filter by show." },
+              { "name": "status", "value": "", "type": "query", "description": "Filter by episode status." },
+              { "name": "query", "value": "", "type": "query", "description": "Full-text search." }
+            ]
+          },
+          "docs": "Returns a paginated list of episodes, filterable by show, status, and full-text query."
+        },
+        {
+          "info": { "name": "Authorize an audio upload.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.transistor.fm/v1/episodes/authorize_upload",
+            "params": [
+              { "name": "filename", "value": "", "type": "query", "description": "The audio file name to upload." }
+            ]
+          },
+          "docs": "Returns a pre-signed upload URL and an audio_url for uploading an episode audio file."
+        },
+        {
+          "info": { "name": "Retrieve an episode.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.transistor.fm/v1/episodes/:id",
+            "params": [
+              { "name": "id", "value": "", "type": "path", "description": "The episode ID." }
+            ]
+          },
+          "docs": "Returns a single episode by ID."
+        },
+        {
+          "info": { "name": "Create an episode.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.transistor.fm/v1/episodes",
+            "body": { "type": "json", "data": "{ \"episode\": { \"show_id\": \"\", \"title\": \"My Episode\", \"audio_url\": \"\" } }" }
+          },
+          "docs": "Creates a new draft episode."
+        },
+        {
+          "info": { "name": "Update an episode.", "type": "http" },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.transistor.fm/v1/episodes/:id",
+            "params": [
+              { "name": "id", "value": "", "type": "path", "description": "The episode ID." }
+            ],
+            "body": { "type": "json", "data": "{ \"episode\": { \"title\": \"Updated title\" } }" }
+          },
+          "docs": "Updates an existing episode."
+        },
+        {
+          "info": { "name": "Publish, schedule, or unpublish an episode.", "type": "http" },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.transistor.fm/v1/episodes/:id/publish",
+            "params": [
+              { "name": "id", "value": "", "type": "path", "description": "The episode ID." }
+            ],
+            "body": { "type": "json", "data": "{ \"episode\": { \"status\": \"published\" } }" }
+          },
+          "docs": "Changes an episode's publication status - publish, schedule, or unpublish."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Analytics", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Show analytics.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.transistor.fm/v1/analytics/:id",
+            "params": [
+              { "name": "id", "value": "", "type": "path", "description": "The show ID." },
+              { "name": "start_date", "value": "", "type": "query", "description": "Start of range (dd-mm-yyyy)." },
+              { "name": "end_date", "value": "", "type": "query", "description": "End of range (dd-mm-yyyy)." }
+            ]
+          },
+          "docs": "Returns downloads per day for a show (default last 14 days)."
+        },
+        {
+          "info": { "name": "All-episodes analytics for a show.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.transistor.fm/v1/analytics/:id/episodes",
+            "params": [
+              { "name": "id", "value": "", "type": "path", "description": "The show ID." },
+              { "name": "start_date", "value": "", "type": "query", "description": "Start of range (dd-mm-yyyy)." },
+              { "name": "end_date", "value": "", "type": "query", "description": "End of range (dd-mm-yyyy)." }
+            ]
+          },
+          "docs": "Returns download analytics aggregated across all episodes of a show (default last 7 days)."
+        },
+        {
+          "info": { "name": "Single-episode analytics.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.transistor.fm/v1/analytics/episodes/:id",
+            "params": [
+              { "name": "id", "value": "", "type": "path", "description": "The episode ID." },
+              { "name": "start_date", "value": "", "type": "query", "description": "Start of range (dd-mm-yyyy)." },
+              { "name": "end_date", "value": "", "type": "query", "description": "End of range (dd-mm-yyyy)." }
+            ]
+          },
+          "docs": "Returns download analytics for a single episode (default last 14 days)."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Subscribers", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List subscribers.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.transistor.fm/v1/subscribers" },
+          "docs": "Returns a paginated list of private podcast subscribers."
+        },
+        {
+          "info": { "name": "Retrieve a subscriber.", "type": "http" },
+          "http": {
+            "method": "GET",
+            "url": "https://api.transistor.fm/v1/subscribers/:id",
+            "params": [
+              { "name": "id", "value": "", "type": "path", "description": "The subscriber ID." }
+            ]
+          },
+          "docs": "Returns a single private podcast subscriber by ID."
+        },
+        {
+          "info": { "name": "Add a subscriber.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.transistor.fm/v1/subscribers",
+            "body": { "type": "json", "data": "{ \"subscriber\": { \"show_id\": \"\", \"email\": \"listener@example.com\" } }" }
+          },
+          "docs": "Adds a private podcast subscriber, optionally sending an email invitation."
+        },
+        {
+          "info": { "name": "Add subscribers in bulk.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.transistor.fm/v1/subscribers/batch",
+            "body": { "type": "json", "data": "{ \"show_id\": \"\", \"subscribers\": [ { \"email\": \"a@example.com\" }, { \"email\": \"b@example.com\" } ] }" }
+          },
+          "docs": "Adds multiple private podcast subscribers in a single request."
+        },
+        {
+          "info": { "name": "Update a subscriber.", "type": "http" },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.transistor.fm/v1/subscribers/:id",
+            "params": [
+              { "name": "id", "value": "", "type": "path", "description": "The subscriber ID." }
+            ],
+            "body": { "type": "json", "data": "{ \"subscriber\": { \"email\": \"new@example.com\" } }" }
+          },
+          "docs": "Updates a private podcast subscriber's email address."
+        },
+        {
+          "info": { "name": "Remove a subscriber by ID.", "type": "http" },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.transistor.fm/v1/subscribers/:id",
+            "params": [
+              { "name": "id", "value": "", "type": "path", "description": "The subscriber ID." }
+            ]
+          },
+          "docs": "Removes a single private podcast subscriber by ID."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Webhooks", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List webhooks.", "type": "http" },
+          "http": { "method": "GET", "url": "https://api.transistor.fm/v1/webhooks" },
+          "docs": "Returns the webhook subscriptions in your account."
+        },
+        {
+          "info": { "name": "Subscribe to an event.", "type": "http" },
+          "http": {
+            "method": "POST",
+            "url": "https://api.transistor.fm/v1/webhooks",
+            "body": { "type": "json", "data": "{ \"event_name\": \"episode_published\", \"url\": \"https://example.com/webhook\", \"show_id\": \"\" }" }
+          },
+          "docs": "Registers a webhook that POSTs to a callback URL when an event fires."
+        },
+        {
+          "info": { "name": "Unsubscribe a webhook.", "type": "http" },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.transistor.fm/v1/webhooks/:id",
+            "params": [
+              { "name": "id", "value": "", "type": "path", "description": "The webhook ID." }
+            ]
+          },
+          "docs": "Deletes a webhook subscription by ID."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,157 @@
+aid: transistor
+url: https://raw.githubusercontent.com/api-evangelist/transistor/refs/heads/main/apis.yml
+name: Transistor
+kind: company
+description: Transistor is a podcast hosting and analytics platform that lets teams
+  host unlimited shows, distribute episodes to Apple Podcasts, Spotify, and YouTube,
+  run private (subscriber-only) podcasts, and measure downloads with advanced
+  analytics. Transistor exposes a documented public REST API at
+  https://api.transistor.fm/v1 that follows the JSON:API specification, is
+  authenticated with an x-api-key header, and covers shows, episodes, analytics,
+  private podcast subscribers, and event webhooks.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- Podcasting
+- Podcast Hosting
+- Analytics
+- Media
+- Audio
+- JSON:API
+created: '2026-07-05'
+modified: '2026-07-05'
+specificationVersion: '0.19'
+apis:
+- aid: transistor:transistor-shows-api
+  name: Transistor Shows API
+  tags:
+  - Shows
+  - Podcasts
+  - JSON:API
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.transistor.fm/#Show
+  baseURL: https://api.transistor.fm/v1
+  properties:
+  - url: https://developers.transistor.fm/
+    type: Documentation
+  - url: https://developers.transistor.fm/#Show
+    type: APIReference
+  - url: openapi/transistor-openapi.yml
+    type: OpenAPI
+  - url: collections/transistor.postman_collection.json
+    type: PostmanCollection
+  - url: collections/transistor.opencollection.json
+    type: OpenCollection
+  description: List and retrieve the podcasts (shows) in your Transistor account and
+    update show metadata. Returns JSON:API resources for each show, including title,
+    description, author, artwork, and distribution details.
+- aid: transistor:transistor-episodes-api
+  name: Transistor Episodes API
+  tags:
+  - Episodes
+  - Publishing
+  - Audio
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.transistor.fm/#Episode
+  baseURL: https://api.transistor.fm/v1
+  properties:
+  - url: https://developers.transistor.fm/
+    type: Documentation
+  - url: https://developers.transistor.fm/#Episode
+    type: APIReference
+  - url: openapi/transistor-openapi.yml
+    type: OpenAPI
+  - url: collections/transistor.postman_collection.json
+    type: PostmanCollection
+  - url: collections/transistor.opencollection.json
+    type: OpenCollection
+  description: Create, list, retrieve, update, and publish podcast episodes. Includes
+    authorizing an audio-file upload, creating draft episodes, and publishing,
+    scheduling, or unpublishing an episode. Episodes are filterable by show, status,
+    and full-text search.
+- aid: transistor:transistor-analytics-api
+  name: Transistor Analytics API
+  tags:
+  - Analytics
+  - Downloads
+  - Metrics
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.transistor.fm/#Analytics
+  baseURL: https://api.transistor.fm/v1
+  properties:
+  - url: https://developers.transistor.fm/
+    type: Documentation
+  - url: https://developers.transistor.fm/#Analytics
+    type: APIReference
+  - url: openapi/transistor-openapi.yml
+    type: OpenAPI
+  - url: collections/transistor.postman_collection.json
+    type: PostmanCollection
+  - url: collections/transistor.opencollection.json
+    type: OpenCollection
+  description: Retrieve download analytics for a show over a date range, aggregate
+    analytics across all episodes of a show, and per-episode download analytics.
+    Data is returned as JSON:API resources with daily download counts.
+- aid: transistor:transistor-subscribers-api
+  name: Transistor Subscribers API
+  tags:
+  - Subscribers
+  - Private Podcasts
+  - Access
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.transistor.fm/#Subscriber
+  baseURL: https://api.transistor.fm/v1
+  properties:
+  - url: https://developers.transistor.fm/
+    type: Documentation
+  - url: https://developers.transistor.fm/#Subscriber
+    type: APIReference
+  - url: openapi/transistor-openapi.yml
+    type: OpenAPI
+  - url: collections/transistor.postman_collection.json
+    type: PostmanCollection
+  - url: collections/transistor.opencollection.json
+    type: OpenCollection
+  description: Manage private (subscriber-only) podcast subscribers - list, retrieve,
+    add single or batch subscribers with optional email invitations, update a
+    subscriber's email, and remove subscribers. Private feeds gate episode access
+    to authorized subscribers only.
+- aid: transistor:transistor-webhooks-api
+  name: Transistor Webhooks API
+  tags:
+  - Webhooks
+  - Events
+  - Notifications
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://developers.transistor.fm/#Webhook
+  baseURL: https://api.transistor.fm/v1
+  properties:
+  - url: https://developers.transistor.fm/
+    type: Documentation
+  - url: https://developers.transistor.fm/#Webhook
+    type: APIReference
+  - url: openapi/transistor-openapi.yml
+    type: OpenAPI
+  - url: collections/transistor.postman_collection.json
+    type: PostmanCollection
+  - url: collections/transistor.opencollection.json
+    type: OpenCollection
+  description: Subscribe to and manage event webhooks. Register HTTP callback URLs to
+    receive server-to-server notifications for episode_created, episode_published,
+    subscriber_created, and subscriber_deleted events, and list or delete existing
+    webhook subscriptions.
+common:
+- type: LinkedIn
+  url: https://www.linkedin.com/company/transistorfm
+- type: Website
+  url: https://transistor.fm
+- type: Documentation
+  url: https://developers.transistor.fm/
+- type: Plans
+  url: plans/transistor-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/transistor-rate-limits.yml
+- type: FinOps
+  url: finops/transistor-finops.yml
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

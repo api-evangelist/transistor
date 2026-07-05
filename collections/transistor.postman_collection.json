@@ -1,0 +1,257 @@
+{
+  "info": {
+    "name": "Transistor API",
+    "description": "Public REST API for the Transistor podcast hosting and analytics platform. Follows the JSON:API specification. Base URL: https://api.transistor.fm/v1. Authenticate with an API key sent in the x-api-key header (generated in the Transistor dashboard Account area). Rate limited to 10 requests per 10 seconds.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      { "key": "key", "value": "x-api-key", "type": "string" },
+      { "key": "value", "value": "{{apiKey}}", "type": "string" },
+      { "key": "in", "value": "header", "type": "string" }
+    ]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://api.transistor.fm/v1", "type": "string" },
+    { "key": "apiKey", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Account",
+      "item": [
+        {
+          "name": "Retrieve authenticated user",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/", "host": ["{{baseUrl}}"], "path": [""] },
+            "description": "Returns details for the authenticated user associated with the API key."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Shows",
+      "item": [
+        {
+          "name": "List shows",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/shows", "host": ["{{baseUrl}}"], "path": ["shows"] },
+            "description": "Returns a paginated list of the shows in your account."
+          }
+        },
+        {
+          "name": "Retrieve a show",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/shows/:id", "host": ["{{baseUrl}}"], "path": ["shows", ":id"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Returns a single show by ID."
+          }
+        },
+        {
+          "name": "Update a show",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"show\": {\n    \"description\": \"Updated show description\"\n  }\n}" },
+            "url": { "raw": "{{baseUrl}}/shows/:id", "host": ["{{baseUrl}}"], "path": ["shows", ":id"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Updates metadata for a single show."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Episodes",
+      "item": [
+        {
+          "name": "List episodes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/episodes?show_id=&status=&query=", "host": ["{{baseUrl}}"], "path": ["episodes"], "query": [{ "key": "show_id", "value": "" }, { "key": "status", "value": "" }, { "key": "query", "value": "" }] },
+            "description": "Returns a paginated list of episodes, filterable by show, status, and full-text query."
+          }
+        },
+        {
+          "name": "Authorize an audio upload",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/episodes/authorize_upload?filename=", "host": ["{{baseUrl}}"], "path": ["episodes", "authorize_upload"], "query": [{ "key": "filename", "value": "" }] },
+            "description": "Returns a pre-signed upload URL and an audio_url for uploading an episode audio file."
+          }
+        },
+        {
+          "name": "Retrieve an episode",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/episodes/:id", "host": ["{{baseUrl}}"], "path": ["episodes", ":id"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Returns a single episode by ID."
+          }
+        },
+        {
+          "name": "Create an episode",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"episode\": {\n    \"show_id\": \"\",\n    \"title\": \"My Episode\",\n    \"audio_url\": \"\"\n  }\n}" },
+            "url": { "raw": "{{baseUrl}}/episodes", "host": ["{{baseUrl}}"], "path": ["episodes"] },
+            "description": "Creates a new draft episode."
+          }
+        },
+        {
+          "name": "Update an episode",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"episode\": {\n    \"title\": \"Updated title\"\n  }\n}" },
+            "url": { "raw": "{{baseUrl}}/episodes/:id", "host": ["{{baseUrl}}"], "path": ["episodes", ":id"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Updates an existing episode."
+          }
+        },
+        {
+          "name": "Publish, schedule, or unpublish an episode",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"episode\": {\n    \"status\": \"published\"\n  }\n}" },
+            "url": { "raw": "{{baseUrl}}/episodes/:id/publish", "host": ["{{baseUrl}}"], "path": ["episodes", ":id", "publish"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Changes an episode's publication status - publish, schedule, or unpublish."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Analytics",
+      "item": [
+        {
+          "name": "Show analytics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/analytics/:id?start_date=&end_date=", "host": ["{{baseUrl}}"], "path": ["analytics", ":id"], "variable": [{ "key": "id", "value": "" }], "query": [{ "key": "start_date", "value": "" }, { "key": "end_date", "value": "" }] },
+            "description": "Returns downloads per day for a show (default last 14 days)."
+          }
+        },
+        {
+          "name": "All-episodes analytics for a show",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/analytics/:id/episodes?start_date=&end_date=", "host": ["{{baseUrl}}"], "path": ["analytics", ":id", "episodes"], "variable": [{ "key": "id", "value": "" }], "query": [{ "key": "start_date", "value": "" }, { "key": "end_date", "value": "" }] },
+            "description": "Returns download analytics aggregated across all episodes of a show (default last 7 days)."
+          }
+        },
+        {
+          "name": "Single-episode analytics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/analytics/episodes/:id?start_date=&end_date=", "host": ["{{baseUrl}}"], "path": ["analytics", "episodes", ":id"], "variable": [{ "key": "id", "value": "" }], "query": [{ "key": "start_date", "value": "" }, { "key": "end_date", "value": "" }] },
+            "description": "Returns download analytics for a single episode (default last 14 days)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Subscribers",
+      "item": [
+        {
+          "name": "List subscribers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/subscribers", "host": ["{{baseUrl}}"], "path": ["subscribers"] },
+            "description": "Returns a paginated list of private podcast subscribers."
+          }
+        },
+        {
+          "name": "Retrieve a subscriber",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/subscribers/:id", "host": ["{{baseUrl}}"], "path": ["subscribers", ":id"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Returns a single private podcast subscriber by ID."
+          }
+        },
+        {
+          "name": "Add a subscriber",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"subscriber\": {\n    \"show_id\": \"\",\n    \"email\": \"listener@example.com\"\n  }\n}" },
+            "url": { "raw": "{{baseUrl}}/subscribers", "host": ["{{baseUrl}}"], "path": ["subscribers"] },
+            "description": "Adds a private podcast subscriber, optionally sending an email invitation."
+          }
+        },
+        {
+          "name": "Add subscribers in bulk",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"show_id\": \"\",\n  \"subscribers\": [\n    { \"email\": \"a@example.com\" },\n    { \"email\": \"b@example.com\" }\n  ]\n}" },
+            "url": { "raw": "{{baseUrl}}/subscribers/batch", "host": ["{{baseUrl}}"], "path": ["subscribers", "batch"] },
+            "description": "Adds multiple private podcast subscribers in a single request."
+          }
+        },
+        {
+          "name": "Update a subscriber",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"subscriber\": {\n    \"email\": \"new@example.com\"\n  }\n}" },
+            "url": { "raw": "{{baseUrl}}/subscribers/:id", "host": ["{{baseUrl}}"], "path": ["subscribers", ":id"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Updates a private podcast subscriber's email address."
+          }
+        },
+        {
+          "name": "Remove a subscriber by ID",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/subscribers/:id", "host": ["{{baseUrl}}"], "path": ["subscribers", ":id"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Removes a single private podcast subscriber by ID."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Webhooks",
+      "item": [
+        {
+          "name": "List webhooks",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/webhooks", "host": ["{{baseUrl}}"], "path": ["webhooks"] },
+            "description": "Returns the webhook subscriptions in your account."
+          }
+        },
+        {
+          "name": "Subscribe to an event",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"event_name\": \"episode_published\",\n  \"url\": \"https://example.com/webhook\",\n  \"show_id\": \"\"\n}" },
+            "url": { "raw": "{{baseUrl}}/webhooks", "host": ["{{baseUrl}}"], "path": ["webhooks"] },
+            "description": "Registers a webhook that POSTs to a callback URL when an event fires."
+          }
+        },
+        {
+          "name": "Unsubscribe a webhook",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/webhooks/:id", "host": ["{{baseUrl}}"], "path": ["webhooks", ":id"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Deletes a webhook subscription by ID."
+          }
+        }
+      ]
+    }
+  ]
+}
