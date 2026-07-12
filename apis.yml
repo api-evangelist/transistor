@@ -140,6 +140,14 @@ apis:
     subscriber_created, and subscriber_deleted events, and list or delete existing
     webhook subscriptions.
 common:
+- type: TrustCenter
+  url: security/transistor-trust-center.yml
+- type: VulnerabilityDisclosure
+  url: security/transistor-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/transistor-domain-security.yml
+- type: Authentication
+  url: authentication/transistor-authentication.yml
 - type: LinkedIn
   url: https://www.linkedin.com/company/transistorfm
 - type: Website
