@@ -140,6 +140,8 @@ apis:
     subscriber_created, and subscriber_deleted events, and list or delete existing
     webhook subscriptions.
 common:
+- type: AgenticAccess
+  url: agentic-access/transistor-agentic-access.yml
 - type: TrustCenter
   url: security/transistor-trust-center.yml
 - type: VulnerabilityDisclosure
