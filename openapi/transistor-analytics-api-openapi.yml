@@ -1,0 +1,166 @@
+openapi: 3.0.3
+info:
+  title: Transistor Account Analytics API
+  description: The Transistor API is a public REST API for the Transistor podcast hosting and analytics platform. It follows the JSON:API specification, accepts JSON or form-encoded request bodies, and returns JSON:API resource objects. It supports sparse fieldsets and included related resources. Authentication is via an x-api-key header carrying an API key generated in the Transistor dashboard Account area. The API covers shows, episodes, download analytics, private podcast subscribers, and event webhooks. Requests are rate-limited to 10 requests per 10 seconds; exceeding the limit returns HTTP 429 and blocks access for 10 seconds.
+  version: '1.0'
+  contact:
+    name: Transistor
+    url: https://transistor.fm
+  termsOfService: https://transistor.fm/legal/
+servers:
+- url: https://api.transistor.fm/v1
+  description: Transistor API v1
+security:
+- apiKeyAuth: []
+tags:
+- name: Analytics
+  description: Download analytics for shows and episodes.
+paths:
+  /analytics/{id}:
+    parameters:
+    - $ref: '#/components/parameters/ResourceId'
+    get:
+      operationId: getShowAnalytics
+      tags:
+      - Analytics
+      summary: Show analytics
+      description: Returns downloads per day for a show. Defaults to the last 14 days; a custom range can be supplied with start_date and end_date.
+      parameters:
+      - $ref: '#/components/parameters/StartDate'
+      - $ref: '#/components/parameters/EndDate'
+      responses:
+        '200':
+          description: Show download analytics.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResource'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /analytics/{id}/episodes:
+    parameters:
+    - $ref: '#/components/parameters/ResourceId'
+    get:
+      operationId: getAllEpisodeAnalytics
+      tags:
+      - Analytics
+      summary: All-episodes analytics for a show
+      description: Returns download analytics aggregated across all episodes of a show. Defaults to the last 7 days; a custom range can be supplied with start_date and end_date.
+      parameters:
+      - $ref: '#/components/parameters/StartDate'
+      - $ref: '#/components/parameters/EndDate'
+      responses:
+        '200':
+          description: Analytics for all episodes of the show.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResource'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /analytics/episodes/{id}:
+    parameters:
+    - $ref: '#/components/parameters/ResourceId'
+    get:
+      operationId: getEpisodeAnalytics
+      tags:
+      - Analytics
+      summary: Single-episode analytics
+      description: Returns download analytics for a single episode. Defaults to the last 14 days; a custom range can be supplied with start_date and end_date.
+      parameters:
+      - $ref: '#/components/parameters/StartDate'
+      - $ref: '#/components/parameters/EndDate'
+      responses:
+        '200':
+          description: Analytics for the episode.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResource'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+components:
+  responses:
+    RateLimited:
+      description: Too many requests. The API allows 10 requests per 10 seconds; exceeding this blocks access for 10 seconds.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+  schemas:
+    JsonApiResource:
+      type: object
+      description: A JSON:API single-resource document.
+      properties:
+        data:
+          $ref: '#/components/schemas/ResourceObject'
+        included:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceObject'
+    Errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              status:
+                type: string
+              title:
+                type: string
+              detail:
+                type: string
+    ResourceObject:
+      type: object
+      description: A JSON:API resource object.
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        attributes:
+          type: object
+          additionalProperties: true
+        relationships:
+          type: object
+          additionalProperties: true
+  parameters:
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: The resource identifier.
+      schema:
+        type: string
+    EndDate:
+      name: end_date
+      in: query
+      description: End of the analytics date range (dd-mm-yyyy).
+      schema:
+        type: string
+    StartDate:
+      name: start_date
+      in: query
+      description: Start of the analytics date range (dd-mm-yyyy).
+      schema:
+        type: string
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API key generated in the Transistor dashboard Account area.

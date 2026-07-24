@@ -1,0 +1,170 @@
+openapi: 3.0.3
+info:
+  title: Transistor Account Webhooks API
+  description: The Transistor API is a public REST API for the Transistor podcast hosting and analytics platform. It follows the JSON:API specification, accepts JSON or form-encoded request bodies, and returns JSON:API resource objects. It supports sparse fieldsets and included related resources. Authentication is via an x-api-key header carrying an API key generated in the Transistor dashboard Account area. The API covers shows, episodes, download analytics, private podcast subscribers, and event webhooks. Requests are rate-limited to 10 requests per 10 seconds; exceeding the limit returns HTTP 429 and blocks access for 10 seconds.
+  version: '1.0'
+  contact:
+    name: Transistor
+    url: https://transistor.fm
+  termsOfService: https://transistor.fm/legal/
+servers:
+- url: https://api.transistor.fm/v1
+  description: Transistor API v1
+security:
+- apiKeyAuth: []
+tags:
+- name: Webhooks
+  description: Event webhook subscriptions.
+paths:
+  /webhooks:
+    get:
+      operationId: listWebhooks
+      tags:
+      - Webhooks
+      summary: List webhooks
+      description: Returns the webhook subscriptions in your account.
+      responses:
+        '200':
+          description: A list of webhook subscriptions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResourceList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    post:
+      operationId: createWebhook
+      tags:
+      - Webhooks
+      summary: Subscribe to an event
+      description: Registers a webhook that POSTs to a callback URL when an event fires. Supported events include episode_created, episode_published, subscriber_created, and subscriber_deleted.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event_name:
+                  type: string
+                  description: The event to subscribe to.
+                url:
+                  type: string
+                  format: uri
+                  description: The callback URL that receives the event payload.
+                show_id:
+                  type: string
+                  description: The show the webhook is scoped to.
+      responses:
+        '201':
+          description: The created webhook subscription.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResource'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /webhooks/{id}:
+    parameters:
+    - $ref: '#/components/parameters/ResourceId'
+    delete:
+      operationId: deleteWebhook
+      tags:
+      - Webhooks
+      summary: Unsubscribe a webhook
+      description: Deletes a webhook subscription by ID.
+      responses:
+        '200':
+          description: The webhook subscription was deleted.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+components:
+  responses:
+    RateLimited:
+      description: Too many requests. The API allows 10 requests per 10 seconds; exceeding this blocks access for 10 seconds.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+  schemas:
+    JsonApiResource:
+      type: object
+      description: A JSON:API single-resource document.
+      properties:
+        data:
+          $ref: '#/components/schemas/ResourceObject'
+        included:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceObject'
+    Errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              status:
+                type: string
+              title:
+                type: string
+              detail:
+                type: string
+    ResourceObject:
+      type: object
+      description: A JSON:API resource object.
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        attributes:
+          type: object
+          additionalProperties: true
+        relationships:
+          type: object
+          additionalProperties: true
+    JsonApiResourceList:
+      type: object
+      description: A JSON:API list document with pagination metadata.
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceObject'
+        meta:
+          type: object
+          properties:
+            currentPage:
+              type: integer
+            totalPages:
+              type: integer
+            totalCount:
+              type: integer
+  parameters:
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: The resource identifier.
+      schema:
+        type: string
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API key generated in the Transistor dashboard Account area.

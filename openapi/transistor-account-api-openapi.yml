@@ -1,0 +1,95 @@
+openapi: 3.0.3
+info:
+  title: Transistor Account API
+  description: The Transistor API is a public REST API for the Transistor podcast hosting and analytics platform. It follows the JSON:API specification, accepts JSON or form-encoded request bodies, and returns JSON:API resource objects. It supports sparse fieldsets and included related resources. Authentication is via an x-api-key header carrying an API key generated in the Transistor dashboard Account area. The API covers shows, episodes, download analytics, private podcast subscribers, and event webhooks. Requests are rate-limited to 10 requests per 10 seconds; exceeding the limit returns HTTP 429 and blocks access for 10 seconds.
+  version: '1.0'
+  contact:
+    name: Transistor
+    url: https://transistor.fm
+  termsOfService: https://transistor.fm/legal/
+servers:
+- url: https://api.transistor.fm/v1
+  description: Transistor API v1
+security:
+- apiKeyAuth: []
+tags:
+- name: Account
+  description: The authenticated user account.
+paths:
+  /:
+    get:
+      operationId: getAccount
+      tags:
+      - Account
+      summary: Retrieve authenticated user
+      description: Returns details for the authenticated user associated with the API key.
+      responses:
+        '200':
+          description: The authenticated user resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResource'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+components:
+  responses:
+    RateLimited:
+      description: Too many requests. The API allows 10 requests per 10 seconds; exceeding this blocks access for 10 seconds.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+  schemas:
+    JsonApiResource:
+      type: object
+      description: A JSON:API single-resource document.
+      properties:
+        data:
+          $ref: '#/components/schemas/ResourceObject'
+        included:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceObject'
+    Errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              status:
+                type: string
+              title:
+                type: string
+              detail:
+                type: string
+    ResourceObject:
+      type: object
+      description: A JSON:API resource object.
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        attributes:
+          type: object
+          additionalProperties: true
+        relationships:
+          type: object
+          additionalProperties: true
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API key generated in the Transistor dashboard Account area.

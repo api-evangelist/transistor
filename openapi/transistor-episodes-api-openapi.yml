@@ -1,0 +1,298 @@
+openapi: 3.0.3
+info:
+  title: Transistor Account Episodes API
+  description: The Transistor API is a public REST API for the Transistor podcast hosting and analytics platform. It follows the JSON:API specification, accepts JSON or form-encoded request bodies, and returns JSON:API resource objects. It supports sparse fieldsets and included related resources. Authentication is via an x-api-key header carrying an API key generated in the Transistor dashboard Account area. The API covers shows, episodes, download analytics, private podcast subscribers, and event webhooks. Requests are rate-limited to 10 requests per 10 seconds; exceeding the limit returns HTTP 429 and blocks access for 10 seconds.
+  version: '1.0'
+  contact:
+    name: Transistor
+    url: https://transistor.fm
+  termsOfService: https://transistor.fm/legal/
+servers:
+- url: https://api.transistor.fm/v1
+  description: Transistor API v1
+security:
+- apiKeyAuth: []
+tags:
+- name: Episodes
+  description: Podcast episodes, drafts, uploads, and publishing.
+paths:
+  /episodes:
+    get:
+      operationId: listEpisodes
+      tags:
+      - Episodes
+      summary: List episodes
+      description: Returns a paginated list of episodes. Filterable by show, status, and a full-text query.
+      parameters:
+      - name: show_id
+        in: query
+        description: Filter episodes belonging to a specific show.
+        schema:
+          type: string
+      - name: status
+        in: query
+        description: Filter by episode status (for example published, scheduled, or draft).
+        schema:
+          type: string
+      - name: query
+        in: query
+        description: Full-text search across episodes.
+        schema:
+          type: string
+      - $ref: '#/components/parameters/PageNumber'
+      - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: A paginated list of episodes.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResourceList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    post:
+      operationId: createEpisode
+      tags:
+      - Episodes
+      summary: Create an episode
+      description: Creates a new draft episode.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WriteBody'
+      responses:
+        '201':
+          description: The created episode.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResource'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /episodes/authorize_upload:
+    get:
+      operationId: authorizeEpisodeUpload
+      tags:
+      - Episodes
+      summary: Authorize an audio upload
+      description: Returns a pre-signed upload URL and an audio_url. Upload your audio file with an HTTP PUT to the returned upload_url, then set the returned audio_url on the episode.
+      parameters:
+      - name: filename
+        in: query
+        required: true
+        description: The name of the audio file to be uploaded.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Upload authorization data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResource'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /episodes/{id}:
+    parameters:
+    - $ref: '#/components/parameters/ResourceId'
+    get:
+      operationId: getEpisode
+      tags:
+      - Episodes
+      summary: Retrieve an episode
+      description: Returns a single episode by ID.
+      responses:
+        '200':
+          description: The requested episode.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResource'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    patch:
+      operationId: updateEpisode
+      tags:
+      - Episodes
+      summary: Update an episode
+      description: Updates an existing episode.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WriteBody'
+      responses:
+        '200':
+          description: The updated episode.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResource'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /episodes/{id}/publish:
+    parameters:
+    - $ref: '#/components/parameters/ResourceId'
+    patch:
+      operationId: publishEpisode
+      tags:
+      - Episodes
+      summary: Publish, schedule, or unpublish an episode
+      description: Changes an episode's publication status - publish immediately, schedule for a future date, or unpublish - by setting the status field.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                episode:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                      description: The target status, for example published, scheduled, or draft.
+                    published_at:
+                      type: string
+                      format: date-time
+                      description: The scheduled publish time when status is scheduled.
+      responses:
+        '200':
+          description: The episode with its updated publication status.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResource'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+components:
+  responses:
+    RateLimited:
+      description: Too many requests. The API allows 10 requests per 10 seconds; exceeding this blocks access for 10 seconds.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    UnprocessableEntity:
+      description: The request was well-formed but the parameters were invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+  schemas:
+    JsonApiResource:
+      type: object
+      description: A JSON:API single-resource document.
+      properties:
+        data:
+          $ref: '#/components/schemas/ResourceObject'
+        included:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceObject'
+    Errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              status:
+                type: string
+              title:
+                type: string
+              detail:
+                type: string
+    ResourceObject:
+      type: object
+      description: A JSON:API resource object.
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        attributes:
+          type: object
+          additionalProperties: true
+        relationships:
+          type: object
+          additionalProperties: true
+    JsonApiResourceList:
+      type: object
+      description: A JSON:API list document with pagination metadata.
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceObject'
+        meta:
+          type: object
+          properties:
+            currentPage:
+              type: integer
+            totalPages:
+              type: integer
+            totalCount:
+              type: integer
+    WriteBody:
+      type: object
+      description: A write payload. Transistor accepts attributes nested under a resource-named key (for example show, episode, or subscriber).
+      additionalProperties: true
+  parameters:
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: The resource identifier.
+      schema:
+        type: string
+    PageNumber:
+      name: pagination[page]
+      in: query
+      description: The page number to return.
+      schema:
+        type: integer
+    PageSize:
+      name: pagination[per]
+      in: query
+      description: The number of records to return per page.
+      schema:
+        type: integer
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API key generated in the Transistor dashboard Account area.
