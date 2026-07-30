@@ -9,7 +9,20 @@ description: Transistor is a podcast hosting and analytics platform that lets te
   https://api.transistor.fm/v1 that follows the JSON:API specification, is
   authenticated with an x-api-key header, and covers shows, episodes, analytics,
   private podcast subscribers, and event webhooks.
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: paid
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Paid · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/transistor.png
 tags:
 - Podcasting
 - Podcast Hosting
@@ -21,124 +34,162 @@ created: '2026-07-05'
 modified: '2026-07-05'
 specificationVersion: '0.19'
 apis:
-- aid: transistor:transistor-shows-api
-  name: Transistor Shows API
-  tags:
-  - Shows
-  - Podcasts
-  - JSON:API
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+- aid: transistor:transistor-account-api
+  name: Transistor Account API
+  description: The authenticated user account.
   humanURL: https://developers.transistor.fm/#Show
   baseURL: https://api.transistor.fm/v1
-  properties:
-  - url: https://developers.transistor.fm/
-    type: Documentation
-  - url: https://developers.transistor.fm/#Show
-    type: APIReference
-  - url: openapi/transistor-openapi.yml
-    type: OpenAPI
-  - url: collections/transistor.postman_collection.json
-    type: PostmanCollection
-  - url: collections/transistor.opencollection.json
-    type: OpenCollection
-  description: List and retrieve the podcasts (shows) in your Transistor account and
-    update show metadata. Returns JSON:API resources for each show, including title,
-    description, author, artwork, and distribution details.
-- aid: transistor:transistor-episodes-api
-  name: Transistor Episodes API
   tags:
-  - Episodes
-  - Publishing
-  - Audio
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://developers.transistor.fm/#Episode
-  baseURL: https://api.transistor.fm/v1
+  - Account
   properties:
-  - url: https://developers.transistor.fm/
-    type: Documentation
-  - url: https://developers.transistor.fm/#Episode
-    type: APIReference
-  - url: openapi/transistor-openapi.yml
-    type: OpenAPI
-  - url: collections/transistor.postman_collection.json
-    type: PostmanCollection
-  - url: collections/transistor.opencollection.json
-    type: OpenCollection
-  description: Create, list, retrieve, update, and publish podcast episodes. Includes
-    authorizing an audio-file upload, creating draft episodes, and publishing,
-    scheduling, or unpublishing an episode. Episodes are filterable by show, status,
-    and full-text search.
+  - type: OpenAPI
+    url: openapi/transistor-account-api-openapi.yml
+  - type: Documentation
+    url: https://developers.transistor.fm/
+  - type: APIReference
+    url: https://developers.transistor.fm/#Show
+  - type: PostmanCollection
+    url: collections/transistor.postman_collection.json
+  - type: OpenCollection
+    url: collections/transistor.opencollection.json
+  - type: APIReference
+    url: https://developers.transistor.fm/#Episode
+  - type: APIReference
+    url: https://developers.transistor.fm/#Analytics
+  - type: APIReference
+    url: https://developers.transistor.fm/#Subscriber
+  - type: APIReference
+    url: https://developers.transistor.fm/#Webhook
 - aid: transistor:transistor-analytics-api
   name: Transistor Analytics API
+  description: Download analytics for shows and episodes.
+  humanURL: https://developers.transistor.fm/#Show
+  baseURL: https://api.transistor.fm/v1
   tags:
   - Analytics
-  - Downloads
-  - Metrics
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://developers.transistor.fm/#Analytics
-  baseURL: https://api.transistor.fm/v1
   properties:
-  - url: https://developers.transistor.fm/
-    type: Documentation
-  - url: https://developers.transistor.fm/#Analytics
-    type: APIReference
-  - url: openapi/transistor-openapi.yml
-    type: OpenAPI
-  - url: collections/transistor.postman_collection.json
-    type: PostmanCollection
-  - url: collections/transistor.opencollection.json
-    type: OpenCollection
-  description: Retrieve download analytics for a show over a date range, aggregate
-    analytics across all episodes of a show, and per-episode download analytics.
-    Data is returned as JSON:API resources with daily download counts.
+  - type: OpenAPI
+    url: openapi/transistor-analytics-api-openapi.yml
+  - type: Documentation
+    url: https://developers.transistor.fm/
+  - type: APIReference
+    url: https://developers.transistor.fm/#Show
+  - type: PostmanCollection
+    url: collections/transistor.postman_collection.json
+  - type: OpenCollection
+    url: collections/transistor.opencollection.json
+  - type: APIReference
+    url: https://developers.transistor.fm/#Episode
+  - type: APIReference
+    url: https://developers.transistor.fm/#Analytics
+  - type: APIReference
+    url: https://developers.transistor.fm/#Subscriber
+  - type: APIReference
+    url: https://developers.transistor.fm/#Webhook
+- aid: transistor:transistor-episodes-api
+  name: Transistor Episodes API
+  description: Podcast episodes, drafts, uploads, and publishing.
+  humanURL: https://developers.transistor.fm/#Show
+  baseURL: https://api.transistor.fm/v1
+  tags:
+  - Episodes
+  properties:
+  - type: OpenAPI
+    url: openapi/transistor-episodes-api-openapi.yml
+  - type: Documentation
+    url: https://developers.transistor.fm/
+  - type: APIReference
+    url: https://developers.transistor.fm/#Show
+  - type: PostmanCollection
+    url: collections/transistor.postman_collection.json
+  - type: OpenCollection
+    url: collections/transistor.opencollection.json
+  - type: APIReference
+    url: https://developers.transistor.fm/#Episode
+  - type: APIReference
+    url: https://developers.transistor.fm/#Analytics
+  - type: APIReference
+    url: https://developers.transistor.fm/#Subscriber
+  - type: APIReference
+    url: https://developers.transistor.fm/#Webhook
+- aid: transistor:transistor-shows-api
+  name: Transistor Shows API
+  description: Podcasts (shows) in your Transistor account.
+  humanURL: https://developers.transistor.fm/#Show
+  baseURL: https://api.transistor.fm/v1
+  tags:
+  - Shows
+  properties:
+  - type: OpenAPI
+    url: openapi/transistor-shows-api-openapi.yml
+  - type: Documentation
+    url: https://developers.transistor.fm/
+  - type: APIReference
+    url: https://developers.transistor.fm/#Show
+  - type: PostmanCollection
+    url: collections/transistor.postman_collection.json
+  - type: OpenCollection
+    url: collections/transistor.opencollection.json
+  - type: APIReference
+    url: https://developers.transistor.fm/#Episode
+  - type: APIReference
+    url: https://developers.transistor.fm/#Analytics
+  - type: APIReference
+    url: https://developers.transistor.fm/#Subscriber
+  - type: APIReference
+    url: https://developers.transistor.fm/#Webhook
 - aid: transistor:transistor-subscribers-api
   name: Transistor Subscribers API
+  description: Private (subscriber-only) podcast subscribers.
+  humanURL: https://developers.transistor.fm/#Show
+  baseURL: https://api.transistor.fm/v1
   tags:
   - Subscribers
-  - Private Podcasts
-  - Access
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://developers.transistor.fm/#Subscriber
-  baseURL: https://api.transistor.fm/v1
   properties:
-  - url: https://developers.transistor.fm/
-    type: Documentation
-  - url: https://developers.transistor.fm/#Subscriber
-    type: APIReference
-  - url: openapi/transistor-openapi.yml
-    type: OpenAPI
-  - url: collections/transistor.postman_collection.json
-    type: PostmanCollection
-  - url: collections/transistor.opencollection.json
-    type: OpenCollection
-  description: Manage private (subscriber-only) podcast subscribers - list, retrieve,
-    add single or batch subscribers with optional email invitations, update a
-    subscriber's email, and remove subscribers. Private feeds gate episode access
-    to authorized subscribers only.
+  - type: OpenAPI
+    url: openapi/transistor-subscribers-api-openapi.yml
+  - type: Documentation
+    url: https://developers.transistor.fm/
+  - type: APIReference
+    url: https://developers.transistor.fm/#Show
+  - type: PostmanCollection
+    url: collections/transistor.postman_collection.json
+  - type: OpenCollection
+    url: collections/transistor.opencollection.json
+  - type: APIReference
+    url: https://developers.transistor.fm/#Episode
+  - type: APIReference
+    url: https://developers.transistor.fm/#Analytics
+  - type: APIReference
+    url: https://developers.transistor.fm/#Subscriber
+  - type: APIReference
+    url: https://developers.transistor.fm/#Webhook
 - aid: transistor:transistor-webhooks-api
   name: Transistor Webhooks API
+  description: Event webhook subscriptions.
+  humanURL: https://developers.transistor.fm/#Show
+  baseURL: https://api.transistor.fm/v1
   tags:
   - Webhooks
-  - Events
-  - Notifications
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://developers.transistor.fm/#Webhook
-  baseURL: https://api.transistor.fm/v1
   properties:
-  - url: https://developers.transistor.fm/
-    type: Documentation
-  - url: https://developers.transistor.fm/#Webhook
-    type: APIReference
-  - url: openapi/transistor-openapi.yml
-    type: OpenAPI
-  - url: collections/transistor.postman_collection.json
-    type: PostmanCollection
-  - url: collections/transistor.opencollection.json
-    type: OpenCollection
-  description: Subscribe to and manage event webhooks. Register HTTP callback URLs to
-    receive server-to-server notifications for episode_created, episode_published,
-    subscriber_created, and subscriber_deleted events, and list or delete existing
-    webhook subscriptions.
+  - type: OpenAPI
+    url: openapi/transistor-webhooks-api-openapi.yml
+  - type: Documentation
+    url: https://developers.transistor.fm/
+  - type: APIReference
+    url: https://developers.transistor.fm/#Show
+  - type: PostmanCollection
+    url: collections/transistor.postman_collection.json
+  - type: OpenCollection
+    url: collections/transistor.opencollection.json
+  - type: APIReference
+    url: https://developers.transistor.fm/#Episode
+  - type: APIReference
+    url: https://developers.transistor.fm/#Analytics
+  - type: APIReference
+    url: https://developers.transistor.fm/#Subscriber
+  - type: APIReference
+    url: https://developers.transistor.fm/#Webhook
 common:
 - type: AgenticAccess
   url: agentic-access/transistor-agentic-access.yml
