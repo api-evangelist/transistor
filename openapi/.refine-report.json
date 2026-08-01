@@ -1,0 +1,24 @@
+{
+  "provider": "transistor",
+  "sources": [
+    "transistor-account-api-openapi.yml",
+    "transistor-analytics-api-openapi.yml",
+    "transistor-episodes-api-openapi.yml",
+    "transistor-shows-api-openapi.yml",
+    "transistor-subscribers-api-openapi.yml",
+    "transistor-webhooks-api-openapi.yml"
+  ],
+  "outputs": [
+    "transistor-account-api-openapi.yml",
+    "transistor-analytics-api-openapi.yml",
+    "transistor-episodes-api-openapi.yml",
+    "transistor-shows-api-openapi.yml",
+    "transistor-subscribers-api-openapi.yml",
+    "transistor-webhooks-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
