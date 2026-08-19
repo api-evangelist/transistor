@@ -1,0 +1,93 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Transistor Account Shows API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-api-key",
+      "value": "{{x-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Shows",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List shows",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.transistor.fm/v1/shows",
+            "params": [
+              {
+                "name": "pagination[page]",
+                "value": "",
+                "type": "query",
+                "description": "The page number to return."
+              },
+              {
+                "name": "pagination[per]",
+                "value": "",
+                "type": "query",
+                "description": "The number of records to return per page."
+              }
+            ]
+          },
+          "docs": "Returns a paginated list of the shows in your account."
+        },
+        {
+          "info": {
+            "name": "Retrieve a show",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.transistor.fm/v1/shows/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The resource identifier."
+              }
+            ]
+          },
+          "docs": "Returns a single show by ID."
+        },
+        {
+          "info": {
+            "name": "Update a show",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.transistor.fm/v1/shows/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The resource identifier."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates metadata for a single show."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,71 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Transistor Account Webhooks API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-api-key",
+      "value": "{{x-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Webhooks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List webhooks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.transistor.fm/v1/webhooks"
+          },
+          "docs": "Returns the webhook subscriptions in your account."
+        },
+        {
+          "info": {
+            "name": "Subscribe to an event",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.transistor.fm/v1/webhooks",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Registers a webhook that POSTs to a callback URL when an event fires. Supported events include episode_created, episode_published, subscriber_created, and subscriber_deleted."
+        },
+        {
+          "info": {
+            "name": "Unsubscribe a webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.transistor.fm/v1/webhooks/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The resource identifier."
+              }
+            ]
+          },
+          "docs": "Deletes a webhook subscription by ID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

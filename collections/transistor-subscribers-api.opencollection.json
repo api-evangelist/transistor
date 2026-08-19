@@ -1,0 +1,161 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Transistor Account Subscribers API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-api-key",
+      "value": "{{x-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Subscribers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List subscribers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.transistor.fm/v1/subscribers",
+            "params": [
+              {
+                "name": "pagination[page]",
+                "value": "",
+                "type": "query",
+                "description": "The page number to return."
+              },
+              {
+                "name": "pagination[per]",
+                "value": "",
+                "type": "query",
+                "description": "The number of records to return per page."
+              }
+            ]
+          },
+          "docs": "Returns a paginated list of private podcast subscribers."
+        },
+        {
+          "info": {
+            "name": "Add a subscriber",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.transistor.fm/v1/subscribers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Adds a private podcast subscriber, optionally sending an email invitation."
+        },
+        {
+          "info": {
+            "name": "Remove a subscriber",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.transistor.fm/v1/subscribers",
+            "params": [
+              {
+                "name": "email",
+                "value": "",
+                "type": "query",
+                "description": "The email address of the subscriber to remove."
+              }
+            ]
+          },
+          "docs": "Removes a private podcast subscriber, identified by email."
+        },
+        {
+          "info": {
+            "name": "Add subscribers in bulk",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.transistor.fm/v1/subscribers/batch",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Adds multiple private podcast subscribers in a single request."
+        },
+        {
+          "info": {
+            "name": "Retrieve a subscriber",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.transistor.fm/v1/subscribers/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The resource identifier."
+              }
+            ]
+          },
+          "docs": "Returns a single private podcast subscriber by ID."
+        },
+        {
+          "info": {
+            "name": "Update a subscriber",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.transistor.fm/v1/subscribers/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The resource identifier."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates a private podcast subscriber's email address."
+        },
+        {
+          "info": {
+            "name": "Remove a subscriber by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.transistor.fm/v1/subscribers/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The resource identifier."
+              }
+            ]
+          },
+          "docs": "Removes a single private podcast subscriber by ID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

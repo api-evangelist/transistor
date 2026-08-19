@@ -1,0 +1,119 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Transistor Account Analytics API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-api-key",
+      "value": "{{x-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Analytics",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Show analytics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.transistor.fm/v1/analytics/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The resource identifier."
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Start of the analytics date range (dd-mm-yyyy)."
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "End of the analytics date range (dd-mm-yyyy)."
+              }
+            ]
+          },
+          "docs": "Returns downloads per day for a show. Defaults to the last 14 days; a custom range can be supplied with start_date and end_date."
+        },
+        {
+          "info": {
+            "name": "All-episodes analytics for a show",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.transistor.fm/v1/analytics/:id/episodes",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The resource identifier."
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Start of the analytics date range (dd-mm-yyyy)."
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "End of the analytics date range (dd-mm-yyyy)."
+              }
+            ]
+          },
+          "docs": "Returns download analytics aggregated across all episodes of a show. Defaults to the last 7 days; a custom range can be supplied with start_date and end_date."
+        },
+        {
+          "info": {
+            "name": "Single-episode analytics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.transistor.fm/v1/analytics/episodes/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The resource identifier."
+              },
+              {
+                "name": "start_date",
+                "value": "",
+                "type": "query",
+                "description": "Start of the analytics date range (dd-mm-yyyy)."
+              },
+              {
+                "name": "end_date",
+                "value": "",
+                "type": "query",
+                "description": "End of the analytics date range (dd-mm-yyyy)."
+              }
+            ]
+          },
+          "docs": "Returns download analytics for a single episode. Defaults to the last 14 days; a custom range can be supplied with start_date and end_date."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

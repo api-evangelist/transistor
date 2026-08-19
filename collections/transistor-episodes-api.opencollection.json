@@ -1,0 +1,168 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Transistor Account Episodes API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-api-key",
+      "value": "{{x-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Episodes",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List episodes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.transistor.fm/v1/episodes",
+            "params": [
+              {
+                "name": "show_id",
+                "value": "",
+                "type": "query",
+                "description": "Filter episodes belonging to a specific show."
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by episode status (for example published, scheduled, or draft)."
+              },
+              {
+                "name": "query",
+                "value": "",
+                "type": "query",
+                "description": "Full-text search across episodes."
+              },
+              {
+                "name": "pagination[page]",
+                "value": "",
+                "type": "query",
+                "description": "The page number to return."
+              },
+              {
+                "name": "pagination[per]",
+                "value": "",
+                "type": "query",
+                "description": "The number of records to return per page."
+              }
+            ]
+          },
+          "docs": "Returns a paginated list of episodes. Filterable by show, status, and a full-text query."
+        },
+        {
+          "info": {
+            "name": "Create an episode",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.transistor.fm/v1/episodes",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new draft episode."
+        },
+        {
+          "info": {
+            "name": "Authorize an audio upload",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.transistor.fm/v1/episodes/authorize_upload",
+            "params": [
+              {
+                "name": "filename",
+                "value": "",
+                "type": "query",
+                "description": "The name of the audio file to be uploaded."
+              }
+            ]
+          },
+          "docs": "Returns a pre-signed upload URL and an audio_url. Upload your audio file with an HTTP PUT to the returned upload_url, then set the returned audio_url on the episode."
+        },
+        {
+          "info": {
+            "name": "Retrieve an episode",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.transistor.fm/v1/episodes/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The resource identifier."
+              }
+            ]
+          },
+          "docs": "Returns a single episode by ID."
+        },
+        {
+          "info": {
+            "name": "Update an episode",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.transistor.fm/v1/episodes/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The resource identifier."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates an existing episode."
+        },
+        {
+          "info": {
+            "name": "Publish, schedule, or unpublish an episode",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.transistor.fm/v1/episodes/:id/publish",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The resource identifier."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Changes an episode's publication status - publish immediately, schedule for a future date, or unpublish - by setting the status field."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
