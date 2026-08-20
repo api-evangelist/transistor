@@ -170,6 +170,8 @@ apis:
   humanURL: https://developers.transistor.fm/#Show
   baseURL: https://api.transistor.fm/v1
   tags:
+  - Webhook
+  tags_raw:
   - Webhooks
   properties:
   - type: OpenAPI
