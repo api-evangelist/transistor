@@ -205,6 +205,9 @@ apis:
   - type: APIReference
     url: https://developers.transistor.fm/#Webhook
 common:
+- type: CapabilityMap
+  url: capabilities/transistor-capability-edges.yml
+  name: Transistor Business Capability Map
 - type: AgenticAccess
   url: agentic-access/transistor-agentic-access.yml
 - type: TrustCenter

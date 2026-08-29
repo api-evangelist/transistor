@@ -1,0 +1,46 @@
+slug: transistor
+provider: Transistor
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Media, Entertainment & Telecom Content
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 3
+edges:
+- tag: Analytics
+  spec_file: transistor-analytics-api-openapi.yml
+  capability_id: BC-3770.30
+  capability_id_l1: BC-3770
+  capability_name: Content Performance Analytics
+  confidence: 0.72
+  evidence: GET /analytics/{id}/episodes  getAllEpisodeAnalytics  All-episodes analytics for a show
+  reason: Operations return download/listening analytics per show and per episode, i.e. analytics of how
+    content performs by title over time — Content Performance Analytics under Audience Measurement & Insights.
+    Some ambiguity with viewership/listenership data capture.
+- tag: Webhooks
+  spec_file: transistor-webhooks-api-openapi.yml
+  capability_id: BC-4270.80
+  capability_id_l1: BC-4270
+  capability_name: Webhook & Event Subscription Management
+  confidence: 0.72
+  evidence: 'POST /webhooks createWebhook "Subscribe to an event"; DELETE /webhooks/{id} "Unsubscribe
+    a webhook"; description: "The API covers ... event webhooks"'
+  reason: Operations are purely the lifecycle of outbound event webhook subscriptions on a public REST
+    API, which matches Webhook & Event Subscription Management within the developer platform/API ecosystem
+    capability. No podcast-business capability is realised by these three endpoints.
+- tag: Subscribers
+  spec_file: transistor-subscribers-api-openapi.yml
+  capability_id: BC-3750.20
+  capability_id_l1: BC-3750
+  capability_name: Subscription & Entitlement Management
+  confidence: 0.7
+  evidence: POST /subscribers  createSubscriber  Add a subscriber
+  reason: Vendor states it lets teams 'run private (subscriber-only) podcasts' and these operations add,
+    update and remove subscribers who thereby gain access to private feeds — lifecycle of listener subscriptions
+    and access entitlements.
