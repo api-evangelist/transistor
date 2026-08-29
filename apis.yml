@@ -9,6 +9,18 @@ description: Transistor is a podcast hosting and analytics platform that lets te
   https://api.transistor.fm/v1 that follows the JSON:API specification, is
   authenticated with an x-api-key header, and covers shows, episodes, analytics,
   private podcast subscribers, and event webhooks.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: paid
   onboarding: self-serve
