@@ -206,6 +206,8 @@ apis:
   - type: APIReference
     url: https://developers.transistor.fm/#Webhook
 common:
+- type: Pricing
+  url: https://transistor.fm/pricing/
 - type: CapabilityMap
   url: capabilities/transistor-capability-edges.yml
   name: Transistor Business Capability Map
