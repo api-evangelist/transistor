@@ -1,7 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Transistor Account Webhooks API
-  description: The Transistor API is a public REST API for the Transistor podcast hosting and analytics platform. It follows the JSON:API specification, accepts JSON or form-encoded request bodies, and returns JSON:API resource objects. It supports sparse fieldsets and included related resources. Authentication is via an x-api-key header carrying an API key generated in the Transistor dashboard Account area. The API covers shows, episodes, download analytics, private podcast subscribers, and event webhooks. Requests are rate-limited to 10 requests per 10 seconds; exceeding the limit returns HTTP 429 and blocks access for 10 seconds.
+  title: Transistor Webhooks API
+  description: The Transistor API is a public REST API for the Transistor podcast hosting and analytics platform.
   version: '1.0'
   contact:
     name: Transistor
@@ -85,30 +85,15 @@ paths:
         '429':
           $ref: '#/components/responses/RateLimited'
 components:
-  responses:
-    RateLimited:
-      description: Too many requests. The API allows 10 requests per 10 seconds; exceeding this blocks access for 10 seconds.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
-    Unauthorized:
-      description: Missing or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
+  parameters:
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: The resource identifier.
+      schema:
+        type: string
   schemas:
-    JsonApiResource:
-      type: object
-      description: A JSON:API single-resource document.
-      properties:
-        data:
-          $ref: '#/components/schemas/ResourceObject'
-        included:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResourceObject'
     Errors:
       type: object
       properties:
@@ -123,20 +108,16 @@ components:
                 type: string
               detail:
                 type: string
-    ResourceObject:
+    JsonApiResource:
       type: object
-      description: A JSON:API resource object.
+      description: A JSON:API single-resource document.
       properties:
-        id:
-          type: string
-        type:
-          type: string
-        attributes:
-          type: object
-          additionalProperties: true
-        relationships:
-          type: object
-          additionalProperties: true
+        data:
+          $ref: '#/components/schemas/ResourceObject'
+        included:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceObject'
     JsonApiResourceList:
       type: object
       description: A JSON:API list document with pagination metadata.
@@ -154,14 +135,33 @@ components:
               type: integer
             totalCount:
               type: integer
-  parameters:
-    ResourceId:
-      name: id
-      in: path
-      required: true
-      description: The resource identifier.
-      schema:
-        type: string
+    ResourceObject:
+      type: object
+      description: A JSON:API resource object.
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        attributes:
+          type: object
+          additionalProperties: true
+        relationships:
+          type: object
+          additionalProperties: true
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    RateLimited:
+      description: Too many requests. The API allows 10 requests per 10 seconds; exceeding this blocks access for 10 seconds.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
   securitySchemes:
     apiKeyAuth:
       type: apiKey

@@ -1,12 +1,7 @@
 {
   "provider": "transistor",
   "sources": [
-    "transistor-account-api-openapi.yml",
-    "transistor-analytics-api-openapi.yml",
-    "transistor-episodes-api-openapi.yml",
-    "transistor-shows-api-openapi.yml",
-    "transistor-subscribers-api-openapi.yml",
-    "transistor-webhooks-api-openapi.yml"
+    "_original/transistor-openapi.yml"
   ],
   "outputs": [
     "transistor-account-api-openapi.yml",
@@ -19,6 +14,17 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "transistor-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "transistor-account-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "transistor-analytics-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "transistor-episodes-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "transistor-shows-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "transistor-subscribers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "transistor-webhooks-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
