@@ -169,86 +169,6 @@ paths:
         '429':
           $ref: '#/components/responses/RateLimited'
 components:
-  parameters:
-    ResourceId:
-      name: id
-      in: path
-      required: true
-      description: The resource identifier.
-      schema:
-        type: string
-    PageSize:
-      name: pagination[per]
-      in: query
-      description: The number of records to return per page.
-      schema:
-        type: integer
-    PageNumber:
-      name: pagination[page]
-      in: query
-      description: The page number to return.
-      schema:
-        type: integer
-  schemas:
-    Errors:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              status:
-                type: string
-              title:
-                type: string
-              detail:
-                type: string
-    WriteBody:
-      type: object
-      description: A write payload. Transistor accepts attributes nested under a resource-named key (for example show, episode, or subscriber).
-      additionalProperties: true
-    JsonApiResource:
-      type: object
-      description: A JSON:API single-resource document.
-      properties:
-        data:
-          $ref: '#/components/schemas/ResourceObject'
-        included:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResourceObject'
-    JsonApiResourceList:
-      type: object
-      description: A JSON:API list document with pagination metadata.
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResourceObject'
-        meta:
-          type: object
-          properties:
-            currentPage:
-              type: integer
-            totalPages:
-              type: integer
-            totalCount:
-              type: integer
-    ResourceObject:
-      type: object
-      description: A JSON:API resource object.
-      properties:
-        id:
-          type: string
-        type:
-          type: string
-        attributes:
-          type: object
-          additionalProperties: true
-        relationships:
-          type: object
-          additionalProperties: true
   responses:
     NotFound:
       description: The requested resource was not found.
@@ -274,6 +194,86 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Errors'
+  schemas:
+    ResourceObject:
+      type: object
+      description: A JSON:API resource object.
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        attributes:
+          type: object
+          additionalProperties: true
+        relationships:
+          type: object
+          additionalProperties: true
+    Errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              status:
+                type: string
+              title:
+                type: string
+              detail:
+                type: string
+    JsonApiResourceList:
+      type: object
+      description: A JSON:API list document with pagination metadata.
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceObject'
+        meta:
+          type: object
+          properties:
+            currentPage:
+              type: integer
+            totalPages:
+              type: integer
+            totalCount:
+              type: integer
+    JsonApiResource:
+      type: object
+      description: A JSON:API single-resource document.
+      properties:
+        data:
+          $ref: '#/components/schemas/ResourceObject'
+        included:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceObject'
+    WriteBody:
+      type: object
+      description: A write payload. Transistor accepts attributes nested under a resource-named key (for example show, episode, or subscriber).
+      additionalProperties: true
+  parameters:
+    PageNumber:
+      name: pagination[page]
+      in: query
+      description: The page number to return.
+      schema:
+        type: integer
+    PageSize:
+      name: pagination[per]
+      in: query
+      description: The number of records to return per page.
+      schema:
+        type: integer
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: The resource identifier.
+      schema:
+        type: string
   securitySchemes:
     apiKeyAuth:
       type: apiKey

@@ -87,11 +87,10 @@ paths:
           $ref: '#/components/responses/RateLimited'
 components:
   parameters:
-    ResourceId:
-      name: id
-      in: path
-      required: true
-      description: The resource identifier.
+    EndDate:
+      name: end_date
+      in: query
+      description: End of the analytics date range (dd-mm-yyyy).
       schema:
         type: string
     StartDate:
@@ -100,13 +99,28 @@ components:
       description: Start of the analytics date range (dd-mm-yyyy).
       schema:
         type: string
-    EndDate:
-      name: end_date
-      in: query
-      description: End of the analytics date range (dd-mm-yyyy).
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: The resource identifier.
       schema:
         type: string
   schemas:
+    ResourceObject:
+      type: object
+      description: A JSON:API resource object.
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        attributes:
+          type: object
+          additionalProperties: true
+        relationships:
+          type: object
+          additionalProperties: true
     Errors:
       type: object
       properties:
@@ -131,20 +145,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ResourceObject'
-    ResourceObject:
-      type: object
-      description: A JSON:API resource object.
-      properties:
-        id:
-          type: string
-        type:
-          type: string
-        attributes:
-          type: object
-          additionalProperties: true
-        relationships:
-          type: object
-          additionalProperties: true
   responses:
     Unauthorized:
       description: Missing or invalid API key.

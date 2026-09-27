@@ -85,15 +85,21 @@ paths:
         '429':
           $ref: '#/components/responses/RateLimited'
 components:
-  parameters:
-    ResourceId:
-      name: id
-      in: path
-      required: true
-      description: The resource identifier.
-      schema:
-        type: string
   schemas:
+    ResourceObject:
+      type: object
+      description: A JSON:API resource object.
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        attributes:
+          type: object
+          additionalProperties: true
+        relationships:
+          type: object
+          additionalProperties: true
     Errors:
       type: object
       properties:
@@ -108,16 +114,6 @@ components:
                 type: string
               detail:
                 type: string
-    JsonApiResource:
-      type: object
-      description: A JSON:API single-resource document.
-      properties:
-        data:
-          $ref: '#/components/schemas/ResourceObject'
-        included:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResourceObject'
     JsonApiResourceList:
       type: object
       description: A JSON:API list document with pagination metadata.
@@ -135,20 +131,16 @@ components:
               type: integer
             totalCount:
               type: integer
-    ResourceObject:
+    JsonApiResource:
       type: object
-      description: A JSON:API resource object.
+      description: A JSON:API single-resource document.
       properties:
-        id:
-          type: string
-        type:
-          type: string
-        attributes:
-          type: object
-          additionalProperties: true
-        relationships:
-          type: object
-          additionalProperties: true
+        data:
+          $ref: '#/components/schemas/ResourceObject'
+        included:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceObject'
   responses:
     Unauthorized:
       description: Missing or invalid API key.
@@ -162,6 +154,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Errors'
+  parameters:
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: The resource identifier.
+      schema:
+        type: string
   securitySchemes:
     apiKeyAuth:
       type: apiKey
