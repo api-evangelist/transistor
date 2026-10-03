@@ -35,6 +35,19 @@ paths:
         '429':
           $ref: '#/components/responses/RateLimited'
 components:
+  responses:
+    RateLimited:
+      description: Too many requests. The API allows 10 requests per 10 seconds; exceeding this blocks access for 10 seconds.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
   schemas:
     ResourceObject:
       type: object
@@ -50,6 +63,16 @@ components:
         relationships:
           type: object
           additionalProperties: true
+    JsonApiResource:
+      type: object
+      description: A JSON:API single-resource document.
+      properties:
+        data:
+          $ref: '#/components/schemas/ResourceObject'
+        included:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceObject'
     Errors:
       type: object
       properties:
@@ -64,29 +87,6 @@ components:
                 type: string
               detail:
                 type: string
-    JsonApiResource:
-      type: object
-      description: A JSON:API single-resource document.
-      properties:
-        data:
-          $ref: '#/components/schemas/ResourceObject'
-        included:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResourceObject'
-  responses:
-    Unauthorized:
-      description: Missing or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
-    RateLimited:
-      description: Too many requests. The API allows 10 requests per 10 seconds; exceeding this blocks access for 10 seconds.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
   securitySchemes:
     apiKeyAuth:
       type: apiKey

@@ -83,25 +83,26 @@ paths:
         '429':
           $ref: '#/components/responses/RateLimited'
 components:
-  responses:
-    NotFound:
-      description: The requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
-    Unauthorized:
-      description: Missing or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
-    RateLimited:
-      description: Too many requests. The API allows 10 requests per 10 seconds; exceeding this blocks access for 10 seconds.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
+  parameters:
+    PageNumber:
+      name: pagination[page]
+      in: query
+      description: The page number to return.
+      schema:
+        type: integer
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: The resource identifier.
+      schema:
+        type: string
+    PageSize:
+      name: pagination[per]
+      in: query
+      description: The number of records to return per page.
+      schema:
+        type: integer
   schemas:
     ResourceObject:
       type: object
@@ -117,6 +118,20 @@ components:
         relationships:
           type: object
           additionalProperties: true
+    JsonApiResource:
+      type: object
+      description: A JSON:API single-resource document.
+      properties:
+        data:
+          $ref: '#/components/schemas/ResourceObject'
+        included:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceObject'
+    WriteBody:
+      type: object
+      description: A write payload. Transistor accepts attributes nested under a resource-named key (for example show, episode, or subscriber).
+      additionalProperties: true
     Errors:
       type: object
       properties:
@@ -148,40 +163,25 @@ components:
               type: integer
             totalCount:
               type: integer
-    WriteBody:
-      type: object
-      description: A write payload. Transistor accepts attributes nested under a resource-named key (for example show, episode, or subscriber).
-      additionalProperties: true
-    JsonApiResource:
-      type: object
-      description: A JSON:API single-resource document.
-      properties:
-        data:
-          $ref: '#/components/schemas/ResourceObject'
-        included:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResourceObject'
-  parameters:
-    PageNumber:
-      name: pagination[page]
-      in: query
-      description: The page number to return.
-      schema:
-        type: integer
-    PageSize:
-      name: pagination[per]
-      in: query
-      description: The number of records to return per page.
-      schema:
-        type: integer
-    ResourceId:
-      name: id
-      in: path
-      required: true
-      description: The resource identifier.
-      schema:
-        type: string
+  responses:
+    RateLimited:
+      description: Too many requests. The API allows 10 requests per 10 seconds; exceeding this blocks access for 10 seconds.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
   securitySchemes:
     apiKeyAuth:
       type: apiKey

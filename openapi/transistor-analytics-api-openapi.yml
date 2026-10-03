@@ -86,26 +86,6 @@ paths:
         '429':
           $ref: '#/components/responses/RateLimited'
 components:
-  parameters:
-    EndDate:
-      name: end_date
-      in: query
-      description: End of the analytics date range (dd-mm-yyyy).
-      schema:
-        type: string
-    StartDate:
-      name: start_date
-      in: query
-      description: Start of the analytics date range (dd-mm-yyyy).
-      schema:
-        type: string
-    ResourceId:
-      name: id
-      in: path
-      required: true
-      description: The resource identifier.
-      schema:
-        type: string
   schemas:
     ResourceObject:
       type: object
@@ -121,6 +101,16 @@ components:
         relationships:
           type: object
           additionalProperties: true
+    JsonApiResource:
+      type: object
+      description: A JSON:API single-resource document.
+      properties:
+        data:
+          $ref: '#/components/schemas/ResourceObject'
+        included:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceObject'
     Errors:
       type: object
       properties:
@@ -135,16 +125,26 @@ components:
                 type: string
               detail:
                 type: string
-    JsonApiResource:
-      type: object
-      description: A JSON:API single-resource document.
-      properties:
-        data:
-          $ref: '#/components/schemas/ResourceObject'
-        included:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResourceObject'
+  parameters:
+    EndDate:
+      name: end_date
+      in: query
+      description: End of the analytics date range (dd-mm-yyyy).
+      schema:
+        type: string
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: The resource identifier.
+      schema:
+        type: string
+    StartDate:
+      name: start_date
+      in: query
+      description: Start of the analytics date range (dd-mm-yyyy).
+      schema:
+        type: string
   responses:
     Unauthorized:
       description: Missing or invalid API key.
