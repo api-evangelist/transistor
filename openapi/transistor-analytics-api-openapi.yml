@@ -86,31 +86,20 @@ paths:
         '429':
           $ref: '#/components/responses/RateLimited'
 components:
+  responses:
+    RateLimited:
+      description: Too many requests. The API allows 10 requests per 10 seconds; exceeding this blocks access for 10 seconds.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    Unauthorized:
+      description: Missing or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
   schemas:
-    ResourceObject:
-      type: object
-      description: A JSON:API resource object.
-      properties:
-        id:
-          type: string
-        type:
-          type: string
-        attributes:
-          type: object
-          additionalProperties: true
-        relationships:
-          type: object
-          additionalProperties: true
-    JsonApiResource:
-      type: object
-      description: A JSON:API single-resource document.
-      properties:
-        data:
-          $ref: '#/components/schemas/ResourceObject'
-        included:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResourceObject'
     Errors:
       type: object
       properties:
@@ -125,13 +114,31 @@ components:
                 type: string
               detail:
                 type: string
+    JsonApiResource:
+      type: object
+      description: A JSON:API single-resource document.
+      properties:
+        data:
+          $ref: '#/components/schemas/ResourceObject'
+        included:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceObject'
+    ResourceObject:
+      type: object
+      description: A JSON:API resource object.
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        attributes:
+          type: object
+          additionalProperties: true
+        relationships:
+          type: object
+          additionalProperties: true
   parameters:
-    EndDate:
-      name: end_date
-      in: query
-      description: End of the analytics date range (dd-mm-yyyy).
-      schema:
-        type: string
     ResourceId:
       name: id
       in: path
@@ -145,19 +152,12 @@ components:
       description: Start of the analytics date range (dd-mm-yyyy).
       schema:
         type: string
-  responses:
-    Unauthorized:
-      description: Missing or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
-    RateLimited:
-      description: Too many requests. The API allows 10 requests per 10 seconds; exceeding this blocks access for 10 seconds.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
+    EndDate:
+      name: end_date
+      in: query
+      description: End of the analytics date range (dd-mm-yyyy).
+      schema:
+        type: string
   securitySchemes:
     apiKeyAuth:
       type: apiKey

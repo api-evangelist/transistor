@@ -84,12 +84,6 @@ paths:
           $ref: '#/components/responses/RateLimited'
 components:
   parameters:
-    PageNumber:
-      name: pagination[page]
-      in: query
-      description: The page number to return.
-      schema:
-        type: integer
     ResourceId:
       name: id
       in: path
@@ -103,35 +97,13 @@ components:
       description: The number of records to return per page.
       schema:
         type: integer
+    PageNumber:
+      name: pagination[page]
+      in: query
+      description: The page number to return.
+      schema:
+        type: integer
   schemas:
-    ResourceObject:
-      type: object
-      description: A JSON:API resource object.
-      properties:
-        id:
-          type: string
-        type:
-          type: string
-        attributes:
-          type: object
-          additionalProperties: true
-        relationships:
-          type: object
-          additionalProperties: true
-    JsonApiResource:
-      type: object
-      description: A JSON:API single-resource document.
-      properties:
-        data:
-          $ref: '#/components/schemas/ResourceObject'
-        included:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResourceObject'
-    WriteBody:
-      type: object
-      description: A write payload. Transistor accepts attributes nested under a resource-named key (for example show, episode, or subscriber).
-      additionalProperties: true
     Errors:
       type: object
       properties:
@@ -146,6 +118,34 @@ components:
                 type: string
               detail:
                 type: string
+    WriteBody:
+      type: object
+      description: A write payload. Transistor accepts attributes nested under a resource-named key (for example show, episode, or subscriber).
+      additionalProperties: true
+    JsonApiResource:
+      type: object
+      description: A JSON:API single-resource document.
+      properties:
+        data:
+          $ref: '#/components/schemas/ResourceObject'
+        included:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceObject'
+    ResourceObject:
+      type: object
+      description: A JSON:API resource object.
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        attributes:
+          type: object
+          additionalProperties: true
+        relationships:
+          type: object
+          additionalProperties: true
     JsonApiResourceList:
       type: object
       description: A JSON:API list document with pagination metadata.
@@ -170,14 +170,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Errors'
-    Unauthorized:
-      description: Missing or invalid API key.
+    NotFound:
+      description: The requested resource was not found.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Errors'
-    NotFound:
-      description: The requested resource was not found.
+    Unauthorized:
+      description: Missing or invalid API key.
       content:
         application/json:
           schema:
