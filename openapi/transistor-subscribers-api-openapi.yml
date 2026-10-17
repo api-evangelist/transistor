@@ -170,20 +170,8 @@ paths:
           $ref: '#/components/responses/RateLimited'
 components:
   responses:
-    UnprocessableEntity:
-      description: The request was well-formed but the parameters were invalid.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
     RateLimited:
       description: Too many requests. The API allows 10 requests per 10 seconds; exceeding this blocks access for 10 seconds.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Errors'
-    NotFound:
-      description: The requested resource was not found.
       content:
         application/json:
           schema:
@@ -194,14 +182,19 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Errors'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    UnprocessableEntity:
+      description: The request was well-formed but the parameters were invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
   parameters:
-    ResourceId:
-      name: id
-      in: path
-      required: true
-      description: The resource identifier.
-      schema:
-        type: string
     PageSize:
       name: pagination[per]
       in: query
@@ -214,6 +207,13 @@ components:
       description: The page number to return.
       schema:
         type: integer
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: The resource identifier.
+      schema:
+        type: string
   schemas:
     Errors:
       type: object
@@ -229,10 +229,6 @@ components:
                 type: string
               detail:
                 type: string
-    WriteBody:
-      type: object
-      description: A write payload. Transistor accepts attributes nested under a resource-named key (for example show, episode, or subscriber).
-      additionalProperties: true
     JsonApiResource:
       type: object
       description: A JSON:API single-resource document.
@@ -257,6 +253,10 @@ components:
         relationships:
           type: object
           additionalProperties: true
+    WriteBody:
+      type: object
+      description: A write payload. Transistor accepts attributes nested under a resource-named key (for example show, episode, or subscriber).
+      additionalProperties: true
     JsonApiResourceList:
       type: object
       description: A JSON:API list document with pagination metadata.

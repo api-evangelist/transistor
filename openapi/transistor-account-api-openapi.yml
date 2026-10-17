@@ -49,20 +49,6 @@ components:
           schema:
             $ref: '#/components/schemas/Errors'
   schemas:
-    Errors:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              status:
-                type: string
-              title:
-                type: string
-              detail:
-                type: string
     JsonApiResource:
       type: object
       description: A JSON:API single-resource document.
@@ -87,6 +73,20 @@ components:
         relationships:
           type: object
           additionalProperties: true
+    Errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              status:
+                type: string
+              title:
+                type: string
+              detail:
+                type: string
   securitySchemes:
     apiKeyAuth:
       type: apiKey

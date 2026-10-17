@@ -99,21 +99,27 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Errors'
+  parameters:
+    EndDate:
+      name: end_date
+      in: query
+      description: End of the analytics date range (dd-mm-yyyy).
+      schema:
+        type: string
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      description: The resource identifier.
+      schema:
+        type: string
+    StartDate:
+      name: start_date
+      in: query
+      description: Start of the analytics date range (dd-mm-yyyy).
+      schema:
+        type: string
   schemas:
-    Errors:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            type: object
-            properties:
-              status:
-                type: string
-              title:
-                type: string
-              detail:
-                type: string
     JsonApiResource:
       type: object
       description: A JSON:API single-resource document.
@@ -138,26 +144,20 @@ components:
         relationships:
           type: object
           additionalProperties: true
-  parameters:
-    ResourceId:
-      name: id
-      in: path
-      required: true
-      description: The resource identifier.
-      schema:
-        type: string
-    StartDate:
-      name: start_date
-      in: query
-      description: Start of the analytics date range (dd-mm-yyyy).
-      schema:
-        type: string
-    EndDate:
-      name: end_date
-      in: query
-      description: End of the analytics date range (dd-mm-yyyy).
-      schema:
-        type: string
+    Errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              status:
+                type: string
+              title:
+                type: string
+              detail:
+                type: string
   securitySchemes:
     apiKeyAuth:
       type: apiKey
