@@ -54,3 +54,96 @@
     builder: Pipedream repo (component)
   status: not-a-workflow
   arazzo: null
+- slug: transistor-podcast-index-apps-directory
+  label: Podcast Index (apps directory)
+  partner: podcastindex
+  partner_name: Podcast Index (apps directory)
+  category: open podcast namespace (Podcasting 2.0)
+  type: register
+  channel: standard-directory
+  evidence: https://podcastindex.org/apps
+  source: edge
+  relationship: standard-participant
+  contract_reference:
+    register: Podcast Index apps directory (podcastindex.org/api/apps)
+    standard: 'podcast: RSS namespace (Podcasting 2.0)'
+    spec_file: null
+    role: podcastindex-listed-app
+    registered_name: Transistor
+    register_id: https://transistor.fm
+    app_types:
+    - hosting
+    supported_elements:
+    - Chapters
+    - Funding
+    - Locked
+    - OP3
+    - Person
+    - Podping
+    - Podroll
+    - Remote Item
+    - Transcript
+    - Txt
+    matched_domain: transistor.fm
+    matched_by: domain
+    signal_note: 'participation only: the directory is self-listed and tests nothing (no certified_products); supported_elements
+      is a per-edge signal, never counted'
+    detected_by: sweep-podcasting-2-0.py
+    detected: '2026-10-21'
+  status: not-a-workflow
+  arazzo: null
+- slug: transistor-podcast-namespace-element-support
+  label: Podcast Namespace (element support)
+  partner: podcastindex
+  partner_name: Podcast Namespace (element support)
+  category: open podcast namespace (Podcasting 2.0)
+  type: register
+  channel: standard-directory
+  evidence: https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/element-support.md
+  source: edge
+  relationship: standard-participant
+  contract_reference:
+    register: podcast namespace element support (Podcastindex-org/podcast-namespace docs/element-support.md)
+    standard: 'podcast: RSS namespace (Podcasting 2.0)'
+    spec_file: null
+    role: namespace-implementer
+    registered_name: Transistor
+    register_id: https://transistor.fm
+    supported_elements:
+    - Funding
+    - Locked
+    - Txt
+    matched_domain: transistor.fm
+    matched_by: domain
+    signal_note: 'participation only: production support announced per element; elements are a per-edge signal,
+      never counted'
+    detected_by: sweep-podcasting-2-0.py
+    detected: '2026-10-21'
+  status: not-a-workflow
+  arazzo: null
+- slug: transistor-apple-own
+  label: Apple (own)
+  partner: apple
+  partner_name: Apple (own)
+  category: podcast hosting
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://transistor.fm
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
+- slug: transistor-spotify-own
+  label: Spotify (own)
+  partner: spotify
+  partner_name: Spotify (own)
+  category: podcast hosting
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://support.transistor.fm/en/article/how-do-i-submit-my-show-to-spotify-11jnn4c/
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
